@@ -7,7 +7,7 @@ import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
     // Create employee table
-    // Employment type: full_time for all managers; full_time/part_time for factory workers & sales reps
+    // employment_type: full_time for all managers; full_time/part_time for factory workers & sales reps
     await knex.schema.createTable("employee", (table) => {
         table.increments("id").primary();
         table.string("name").notNullable();

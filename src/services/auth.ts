@@ -1,11 +1,11 @@
 import { TOKEN_SECRET } from "@/config/env";
-import authQueries from "@/queries/auth";
+import { getCredentialsByEmail } from "@/queries/auth";
 import { generateJwtToken } from "@/utils/generateJwtToken";
 import bcrypt from "bcryptjs";
 
 class AuthService {
     public async handleLogin(email: string, password: string) {
-        const { employee_id: employeeId, email: storedEmail, password_hash: storedPasswordHash } = await authQueries.login(email);
+        const { employee_id: employeeId, email: storedEmail, password_hash: storedPasswordHash } = await getCredentialsByEmail(email);
         if (!storedEmail || !storedPasswordHash) {
             throw new Error("Invalid credentials");
         }
@@ -16,7 +16,7 @@ class AuthService {
         }
 
         const token = generateJwtToken(employeeId.toString(), TOKEN_SECRET as string, "1d");
-        return { token };
+        return token;
     }
 }
 

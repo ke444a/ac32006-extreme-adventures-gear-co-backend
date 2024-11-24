@@ -4,6 +4,6 @@ import { loginUser, logoutUser } from "@/controllers/auth";
 const authRouter = Router();
 
 authRouter.post("/login", loginUser);
-authRouter.post("/logout", logoutUser);
+authRouter.get("/logout", logoutUser);
 
 export default authRouter;

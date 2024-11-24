@@ -8,14 +8,15 @@ export const loginUser = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(400).json(<IAPIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Email and password are required", data: null });
+            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Email and password are required" });
+            return;
         }
-        const { token } = await AuthService.handleLogin(email, password);
+        const token = await AuthService.handleLogin(email, password);
         res.cookie("token", token, { httpOnly: true, secure: true, maxAge: TOKEN_EXPIRY_TIME, sameSite: "none" });
-        res.status(200).json(<IAPIResponse>{ status: ResponseStatus.SUCCESS, message: "Login successful", data: null });
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Login successful", data: null });
     } catch (error) {
         console.log(error);
-        res.status(500).json(<IAPIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Unable to login", data: null });
+        res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Unable to login" });
     }
 };
 
@@ -23,12 +24,13 @@ export const logoutUser = async (req: Request, res: Response) => {
     try {
         const cookies = req.cookies;
         if (!cookies?.token) {
-            res.status(204).json(<IAPIResponse>{ status: ResponseStatus.SUCCESS, message: "Logout successful", data: null });
+            res.status(204).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Logout successful" });
+            return;
         }
         res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "none" });
-        res.status(204).json(<IAPIResponse>{ status: ResponseStatus.SUCCESS, message: "Logout successful", data: null });
+        res.status(204).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Logout successful", data: null });
     } catch (error) {
         console.log(error);
-        res.status(500).json(<IAPIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Unable to logout", data: null });
+        res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Unable to logout" });
     }
 };

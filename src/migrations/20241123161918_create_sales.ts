@@ -21,6 +21,9 @@ export async function up(knex: Knex): Promise<void> {
     });
 
     // Create payment table
+    // payment_type: customer, employee
+    // payment_method: cash, card, bank_transfer, cheque (bank_transfer and cheque are for employees only)
+    // payment_status: pending, completed, failed, refunded
     await knex.schema.createTable("payment", (table) => {
         table.increments("id").primary();
         table.string("payment_type", 50).notNullable();

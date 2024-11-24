@@ -7,6 +7,32 @@
 import type { Knex } from "knex";
 
 
+// USE extreme_adventures_gear_db;
+// SET FOREIGN_KEY_CHECKS = 0;
+// DROP TABLE IF EXISTS`branch`;
+// DROP TABLE IF EXISTS`branch_item`;
+// DROP TABLE IF EXISTS`factory`;
+// DROP TABLE IF EXISTS`factory_product_item`;
+// DROP TABLE IF EXISTS`customer`;
+// DROP TABLE IF EXISTS`employee`;
+// DROP TABLE IF EXISTS`employee_credentials`;
+// DROP TABLE IF EXISTS`employee_role`;
+// DROP TABLE IF EXISTS`inventory`;
+// DROP TABLE IF EXISTS`inventory_item`;
+// DROP TABLE IF EXISTS`knex_migrations`;
+// DROP TABLE IF EXISTS`knex_migrations_lock`;
+// DROP TABLE IF EXISTS`location`;
+// DROP TABLE IF EXISTS`payment`;
+// DROP TABLE IF EXISTS`payroll`;
+// DROP TABLE IF EXISTS`product`;
+// DROP TABLE IF EXISTS`product_category`;
+// DROP TABLE IF EXISTS`purchase`;
+// DROP TABLE IF EXISTS`purchase_item`;
+// DROP TABLE IF EXISTS`work_schedule`;
+// DROP TABLE IF EXISTS`shipment`;
+// DROP TABLE IF EXISTS`shipment_item`;
+// SET FOREIGN_KEY_CHECKS = 1;
+
 export async function up(knex: Knex): Promise<void> {
     // Create location table
     await knex.schema.createTable("location", (table) => {
