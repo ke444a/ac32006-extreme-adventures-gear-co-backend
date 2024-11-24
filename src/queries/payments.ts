@@ -1,4 +1,5 @@
 import knex from "@/config/db";
+import { SalesRepresentativeViews } from "@/config/enums";
 
 const createPayment = async (paymentType: PaymentType, paymentMethod: PaymentMethod, paymentStatus: PaymentStatus, amount: number) => {
     const [paymentId] = await knex("payment").insert({
@@ -11,7 +12,7 @@ const createPayment = async (paymentType: PaymentType, paymentMethod: PaymentMet
 };
 
 const updatePayment = async (paymentId: number, paymentStatus: PaymentStatus) => {
-    await knex("sales_rep_create_payment_view").where("id", paymentId).update({ payment_status: paymentStatus });
+    await knex(SalesRepresentativeViews.MODIFY_PAYMENT).where("id", paymentId).update({ payment_status: paymentStatus });
 };
 
 const getPaymentById = async (paymentId: number) => {

@@ -37,3 +37,49 @@ interface ISalesRepPurchaseDetailView {
     branch_id: number;
     sales_rep_id: number;
 }
+
+/**
+ * Views created for inventory managers
+ */
+
+// View to see branch items for their specific branch
+interface IInventoryManagerBranchItemsView {
+    branch_item_id: number;
+    branch_id: number;
+    product_id: number;
+    product_name: string;
+    product_category: string;
+    product_image_url: string;
+    quantity: number;
+    price: number;
+    warranty_duration: number;
+}
+
+// View to see upcoming shipments for their branch
+interface IInventoryManagerShipmentsView {
+    shipment_id: number;
+    factory_name: string;
+    factory_city: string;
+    shipment_status: string;
+    shipped_at: Date;
+    arrived_at: Date | null;
+    total_items: number;
+}
+
+// View to see shipment details
+interface IInventoryManagerShipmentDetailsView {
+    shipment_id: number;
+    product_id: number;
+    product_name: string;
+    product_category: string;
+    product_image_url: string;
+    quantity_shipped: number;
+    manufactured_at: Date;
+}
+
+// View to update shipment status
+interface IInventoryManagerUpdateShipmentView {
+    id: number;
+    shipment_status: string;
+    arrived_at: Date | null;
+}

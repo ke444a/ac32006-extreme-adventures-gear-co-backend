@@ -1,7 +1,8 @@
 import knex from "@/config/db";
+import { SalesRepresentativeViews } from "@/config/enums";
 
 const createCustomer = async (customer: ICustomer): Promise<number> => {
-    const [customerId] = await knex<ICustomerDatabase>("sales_rep_create_customer_view").insert({
+    const [customerId] = await knex(SalesRepresentativeViews.MODIFY_CUSTOMER).insert({
         name: customer.name,
         phone_number: customer.phoneNumber,
         email: customer.email,
@@ -11,16 +12,16 @@ const createCustomer = async (customer: ICustomer): Promise<number> => {
 };
 
 const getAllCustomers = async (): Promise<ISalesRepCustomerView[]> => {
-    return await knex<ISalesRepCustomerView>("sales_rep_all_customers_view");
+    return await knex<ISalesRepCustomerView>(SalesRepresentativeViews.ALL_CUSTOMERS);
 };
 
 const getCustomersByBranch = async (branchId: number): Promise<ISalesRepCustomerView[]> => {
-    return await knex<ISalesRepCustomerView>("sales_rep_branch_customers_view")
+    return await knex<ISalesRepCustomerView>(SalesRepresentativeViews.ALL_CUSTOMERS_IN_BRANCH)
         .where("branch_id", branchId);
 };
 
 const updateCustomer = async (customerId: number, customer: ICustomer): Promise<void> => {
-    await knex<ICustomerDatabase>("sales_rep_create_customer_view")
+    await knex<ICustomerDatabase>(SalesRepresentativeViews.MODIFY_CUSTOMER)
         .where("id", customerId)
         .update({
             name: customer.name,
@@ -31,7 +32,7 @@ const updateCustomer = async (customerId: number, customer: ICustomer): Promise<
 };
 
 const deleteCustomer = async (customerId: number): Promise<void> => {
-    await knex<ICustomerDatabase>("sales_rep_create_customer_view")
+    await knex<ICustomerDatabase>(SalesRepresentativeViews.MODIFY_CUSTOMER)
         .where("id", customerId)
         .delete();
 };

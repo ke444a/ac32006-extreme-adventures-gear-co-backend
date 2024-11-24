@@ -8,6 +8,7 @@ import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
     // Create shipments and shipment items
+    // shipment_status: preparing_to_ship, in_transit, shipped, delivered
     await knex.schema.createTable("shipment", (table) => {
         table.increments("id").primary();
         table.integer("factory_id").unsigned().notNullable();

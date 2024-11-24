@@ -63,5 +63,7 @@ declare global {
         paymentStatus: PaymentStatus;
         amount: number;
     }
+
+    type ShipmentStatus = "preparing_to_ship" | "in_transit" | "shipped" | "delivered";
 }
 

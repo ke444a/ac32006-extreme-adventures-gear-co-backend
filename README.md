@@ -13,3 +13,42 @@
 - Delete customer details
 - Delete purchase details
     * They can only delete purchases that are associated with their branch
+
+
+### Inventory manager
+- Create new branch item
+    * 'Branch item' refers to a product in the particular branch's inventory with a quantity
+- View all branch items for their branch
+- View upcoming shipments for their branch
+- Update shipment status when it has arrived
+- Update branch item quantity
+- Delete branch item
+    * Ability to delete branch item only if its quantity is 0
+
+
+### Factory manager
+- Create new shipment
+- Create new manufactured product
+- View all shipments made by their factory
+- View all manufactured products made by their factory
+- View all employees working in their factory
+- Update shipment status
+- Update manufactured product details
+- Update employee details
+- Delete shipment
+- Delete manufactured product
+- Delete employee
+
+
+### CEO
+- Create new employee
+- Create new payroll for employees
+- View all employees
+- View payrolls
+- View all payments
+- View all purchases
+    * Ability to filter out purchases by branch and/or sales rep
+- Update payrolls
+- Update employee details
+- Delete payrolls
+- Delete employee

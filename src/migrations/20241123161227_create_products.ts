@@ -38,6 +38,8 @@ export async function up(knex: Knex): Promise<void> {
         table.integer("quantity").notNullable();
         table.foreign("branch_id").references("branch.id");
         table.foreign("product_id").references("product.id");
+        table.timestamp("created_at").defaultTo(knex.fn.now());
+        table.timestamp("updated_at").defaultTo(knex.fn.now());
     });
     await knex.schema.createTable("factory_product_item", (table) => {
         table.increments("id").primary();
@@ -47,6 +49,8 @@ export async function up(knex: Knex): Promise<void> {
         table.timestamp("manufactured_at").defaultTo(knex.fn.now());
         table.foreign("factory_id").references("factory.id");
         table.foreign("product_id").references("product.id");
+        table.timestamp("created_at").defaultTo(knex.fn.now());
+        table.timestamp("updated_at").defaultTo(knex.fn.now());
     });
 }
 
