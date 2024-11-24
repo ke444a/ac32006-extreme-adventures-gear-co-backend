@@ -31,24 +31,6 @@ const updatePurchaseItems = async (purchaseItems: (IPurchaseItem & { pricePerUni
     })));
 };
 
-const createCustomer = async (customer: ICustomer) => {
-    const [customerId] = await knex("sales_rep_create_customer_view").insert({
-        name: customer.name,
-        phone_number: customer.phoneNumber,
-        email: customer.email,
-        address: customer.address
-    });
-    return customerId;
-};
-
-const getAllCustomers = async () => {
-    return await knex("sales_rep_all_customers_view");
-};
-
-const getCustomersByBranch = async (branchId: number) => {
-    return await knex("sales_rep_branch_customers_view").where("branch_id", branchId);
-};
-
 const getAllPurchasesByBranch = async (branchId: number) => {
     return await knex("sales_rep_purchase_summary_view").where("branch_id", branchId);
 };
@@ -65,32 +47,13 @@ const deletePurchase = async (purchaseId: number) => {
     await knex("sales_rep_purchase_summary_view").where("id", purchaseId).delete();
 };
 
-
-const updateCustomer = async (customerId: number, customer: ICustomer) => {
-    await knex("sales_rep_create_customer_view").where("id", customerId).update({
-        name: customer.name,
-        phone_number: customer.phoneNumber,
-        email: customer.email,
-        address: customer.address
-    });
-};
-
-const deleteCustomer = async (customerId: number) => {
-    await knex("sales_rep_create_customer_view").where("id", customerId).delete();
-};
-
 export {
     createPurchase,
     createPurchaseItems,
-    createCustomer,
-    getAllCustomers,
-    getCustomersByBranch,
     getAllPurchasesByBranch,
     getPurchasesByBranchAndEmployee,
     getAllPurchaseItemsByPurchaseIds,
     updatePurchase,
     updatePurchaseItems,
-    deletePurchase,
-    updateCustomer,
-    deleteCustomer
+    deletePurchase
 };

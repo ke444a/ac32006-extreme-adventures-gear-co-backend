@@ -1,6 +1,17 @@
 import { createPayment, updatePayment } from "@/queries/payments";
 import { getProductsByIds } from "@/queries/products";
-import { createCustomer, createPurchase, createPurchaseItems, getAllCustomers, getCustomersByBranch, getAllPurchasesByBranch, getPurchasesByBranchAndEmployee, getAllPurchaseItemsByPurchaseIds, updatePurchase, updatePurchaseItems, deletePurchase, updateCustomer, deleteCustomer } from "@/queries/sales";
+import { 
+    createPurchase, 
+    createPurchaseItems, 
+    getAllPurchasesByBranch, 
+    getPurchasesByBranchAndEmployee, 
+    getAllPurchaseItemsByPurchaseIds, 
+    updatePurchase, 
+    updatePurchaseItems, 
+    deletePurchase
+} from "@/queries/purchases";
+import { createCustomer } from "@/queries/customers";
+
 
 class SalesService {
     public async createPurchaseWithExistingCustomer(customerId: number, branchId: number, purchaseItems: IPurchaseItem[], employeeId: number, paymentMethod: PaymentMethod, paymentStatus: PaymentStatus) {
@@ -32,14 +43,6 @@ class SalesService {
         const paymentId = await createPayment("customer", paymentMethod, paymentStatus, totalPrice);
         const purchaseId = await createPurchase(customerId, branchId, employeeId, paymentId, totalPrice);
         await createPurchaseItems(purchaseItemWithPrice, purchaseId);
-    }
-
-    public async getAllCustomers() {
-        return await getAllCustomers();
-    }
-
-    public async getCustomersByBranch(branchId: number) {
-        return await getCustomersByBranch(branchId);
     }
 
     public async getAllPurchasesByBranch(branchId: number) {
@@ -80,14 +83,6 @@ class SalesService {
 
     public async deletePurchase(purchaseId: number) {
         await deletePurchase(purchaseId);
-    }
-
-    public async updateCustomer(customerId: number, customer: ICustomer) {
-        await updateCustomer(customerId, customer);
-    }
-
-    public async deleteCustomer(customerId: number) {
-        await deleteCustomer(customerId);
     }
 }
 

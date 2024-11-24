@@ -145,6 +145,7 @@ export async function up(knex: Knex): Promise<void> {
     // View to create/update customer
     await knex.schema.createView("sales_rep_create_customer_view", (view) => {
         view.columns([
+            "id",
             "name",
             "phone_number",
             "email",
@@ -152,6 +153,7 @@ export async function up(knex: Knex): Promise<void> {
         ]);
         view.as(
             knex.select([
+                "id",
                 "name",
                 "phone_number",
                 "email",

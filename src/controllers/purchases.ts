@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import SalesService from "@/services/sales";
 import { ResponseStatus } from "@/config/enums";
-
+import SalesService from "@/services/purchases";
 
 export const createPurchaseWithExistingCustomer = async (req: Request, res: Response) => {
     try {
@@ -52,37 +51,9 @@ export const createPurchaseWithNewCustomer = async (req: Request, res: Response)
     }
 };
 
-export const getAllCustomers = async (_req: Request, res: Response) => {
-    try {
-        const customers = await SalesService.getAllCustomers();
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { customers } });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(<APIResponse>{ status: "error", message: "Internal server error" });
-    }
-};
-
-export const getCustomersByBranch = async (req: Request, res: Response) => {
-    try {
-        if (!req.user.branch_id) {
-            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Given employee is not assigned to any branch" });
-            return;
-        }
-        const customers = await SalesService.getCustomersByBranch(req.user.branch_id);
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { customers } });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(<APIResponse>{ status: "error", message: "Internal server error" });
-    }
-};
-
 export const getAllPurchasesByBranch = async (req: Request, res: Response) => {
     try {
-        if (!req.user.branch_id) {
-            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Given employee is not assigned to any branch" });
-            return;
-        }
-        const purchases = await SalesService.getAllPurchasesByBranch(req.user.branch_id);
+        const purchases = await SalesService.getAllPurchasesByBranch(req.user.branch_id!);
         res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { purchases } });
     } catch (error) {
         console.log(error);
@@ -92,11 +63,7 @@ export const getAllPurchasesByBranch = async (req: Request, res: Response) => {
 
 export const getPurchasesByBranchAndEmployee = async (req: Request, res: Response) => {
     try {
-        if (!req.user.branch_id) {
-            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Given employee is not assigned to any branch" });
-            return;
-        }
-        const purchases = await SalesService.getPurchasesByBranchAndEmployee(req.user.branch_id, req.user.id);
+        const purchases = await SalesService.getPurchasesByBranchAndEmployee(req.user.branch_id!, req.user.id);
         res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { purchases } });
     } catch (error) {
         console.log(error);
@@ -132,29 +99,4 @@ export const deletePurchase = async (req: Request, res: Response) => {
     }
 };
 
-export const updateCustomer = async (req: Request, res: Response) => {
-    try {
-        const { customerId } = req.params as { customerId: string };
-        const { customer } = req.body as { customer: ICustomer };
-        if (!customer || !customer.name) {
-            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Invalid request body" });
-            return;
-        }
-        await SalesService.updateCustomer(parseInt(customerId), customer);
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Customer updated successfully" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(<APIResponse>{ status: "error", message: "Internal server error" });
-    }
-};
 
-export const deleteCustomer = async (req: Request, res: Response) => {
-    try {
-        const { customerId } = req.params as { customerId: string };
-        await SalesService.deleteCustomer(parseInt(customerId));
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Customer deleted successfully" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(<APIResponse>{ status: "error", message: "Internal server error" });
-    }
-};
