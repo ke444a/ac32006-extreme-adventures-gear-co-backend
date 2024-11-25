@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { TOKEN_SECRET } from "@/config/env";
-import { getEmployeeById } from "@/queries/employees";
+import { getEmployeeByIdQuery } from "@/queries/employees";
 import { ResponseStatus } from "@/config/enums";
 
 export const authCheck = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -14,7 +14,7 @@ export const authCheck = async (req: Request, res: Response, next: NextFunction)
 
     try {
         const decoded = jwt.verify(token, TOKEN_SECRET as string) as JwtPayload;
-        const user = await getEmployeeById(decoded.id);
+        const user = await getEmployeeByIdQuery(decoded.id);
         if (!user) {
             res.status(401).json(<APIResponse>{ status: ResponseStatus.INVALID_TOKEN, message: "Invalid token" });
             return;

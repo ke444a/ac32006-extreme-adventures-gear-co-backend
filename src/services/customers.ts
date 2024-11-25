@@ -1,26 +1,26 @@
 import { 
-    getAllCustomers, 
-    getCustomersByBranch, 
-    updateCustomer, 
-    deleteCustomer 
+    getAllCustomersQuery, 
+    getCustomersByBranchQuery, 
+    updateCustomerQuery, 
+    deleteCustomerQuery 
 } from "@/queries/customers";
 
 
 class CustomersService {
     public async getAllCustomers() {
-        return await getAllCustomers();
+        return await getAllCustomersQuery();
     }
 
     public async getCustomersByBranch(branchId: number) {
-        return await getCustomersByBranch(branchId);
+        return await getCustomersByBranchQuery(branchId);
     }
 
-    public async updateCustomer(customerId: number, customer: ICustomer) {
-        await updateCustomer(customerId, customer);
+    public async updateCustomer(customerId: number, customer: RequestBodyPATCH["CUSTOMER"]) {
+        await updateCustomerQuery(customerId, customer);
     }
 
     public async deleteCustomer(customerId: number) {
-        await deleteCustomer(customerId);
+        await deleteCustomerQuery(customerId);
     }
 }
 

@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("phone_number", 15).notNullable();
         table.integer("age").notNullable();
         table.float("salary").notNullable();
-        table.date("hire_date").notNullable();
+        table.date("hire_date").notNullable().defaultTo(knex.fn.now());
         table.string("employment_type").notNullable();
         table.integer("work_schedule_id").unsigned().notNullable();
         table.integer("location_id").unsigned().notNullable();
@@ -31,7 +31,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string("email").notNullable().unique();
         table.string("password_hash").notNullable();
         table.timestamp("created_at").defaultTo(knex.fn.now());
-        table.foreign("employee_id").references("employee.id");
+        
+        table.foreign("employee_id").references("employee.id").onDelete("CASCADE").onUpdate("CASCADE");
 
         table.index("email", "idx_email");
     });

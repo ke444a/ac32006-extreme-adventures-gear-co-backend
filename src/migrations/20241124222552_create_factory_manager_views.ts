@@ -1,7 +1,7 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-    // View for all shipments from factory
+    // View all shipments from specific factory
     await knex.schema.createView("factory_manager_all_shipments_view", (view) => {
         view.columns([
             "shipment_id",
@@ -44,7 +44,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for all manufactured products in factory
+    // View all manufactured products in specific factory
     await knex.schema.createView("factory_manager_manufactured_products_view", (view) => {
         view.columns([
             "factory_product_id",
@@ -75,7 +75,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for all employees in factory
+    // View all factory workers in specific factory
     await knex.schema.createView("factory_manager_employees_view", (view) => {
         view.columns([
             "factory_id",
@@ -111,10 +111,11 @@ export async function up(knex: Knex): Promise<void> {
                 .join("work_schedule as ws", "e.work_schedule_id", "ws.id")
                 .join("factory as f", "e.location_id", "f.location_id")
                 .orderBy("e.hire_date", "desc")
+                .where("e.name", "=", "factory_worker")
         );
     });
 
-    // View for modifying shipments (CREATE/UPDATE)
+    // Insert/update shipments
     await knex.schema.createView("factory_manager_modify_shipment_view", (view) => {
         view.columns([
             "id",
@@ -138,7 +139,7 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for modifying manufactured products (CREATE/UPDATE)
+    // Insert/update/delete manufactured products
     await knex.schema.createView("factory_manager_modify_manufactured_product_view", (view) => {
         view.columns([
             "id",
@@ -160,7 +161,7 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for modifying employees (UPDATE)
+    // Insert/update factory workers
     await knex.schema.createView("factory_manager_modify_employee_view", (view) => {
         view.columns([
             "id",
@@ -186,7 +187,7 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for shipment items with manufacturing details
+    // View shipment items and factory product details for shipment
     await knex.schema.createView("factory_manager_shipment_details_view", (view) => {
         view.columns([
             "shipment_id",
@@ -195,7 +196,7 @@ export async function up(knex: Knex): Promise<void> {
             "product_category",
             "quantity_shipped",
             "manufactured_at",
-            "manufactured_batch_id",
+            "factory_product_id",
             "total_manufactured_in_batch",
             "remaining_in_factory"
         ]);
@@ -207,29 +208,29 @@ export async function up(knex: Knex): Promise<void> {
                 "pc.name as product_category",
                 "si.quantity_shipped",
                 "fpi.manufactured_at",
-                "fpi.id as manufactured_batch_id",
+                "fpi.id as factory_product_id",
                 knex.raw(`
-                    (SELECT quantity 
+                    COALESCE((SELECT quantity 
                      FROM factory_product_item 
-                     WHERE id = fpi.id) as total_manufactured_in_batch
+                     WHERE id = fpi.id), 0) as total_manufactured_in_batch
                 `),
                 knex.raw(`
-                    (SELECT quantity 
+                    COALESCE((SELECT quantity 
                      FROM factory_product_item 
-                     WHERE id = fpi.id) - si.quantity_shipped as remaining_in_factory
+                     WHERE id = fpi.id), 0) - si.quantity_shipped as remaining_in_factory
                 `)
             ])
                 .from("shipment as s")
                 .join("shipment_item as si", "s.id", "si.shipment_id")
                 .join("factory_product_item as fpi", "si.factory_product_id", "fpi.id")
-                .join("product as p", "fpi.product_id", "p.id")
-                .join("product_category as pc", "p.product_category_id", "pc.id")
+                .leftJoin("product as p", "fpi.product_id", "p.id")
+                .leftJoin("product_category as pc", "p.product_category_id", "pc.id")
                 .orderBy("s.id")
                 .orderBy("fpi.manufactured_at", "desc")
         );
     });
 
-    // View for modifying shipment items (CREATE/UPDATE)
+    // Insert/update shipment items
     await knex.schema.createView("factory_manager_modify_shipment_item_view", (view) => {
         view.columns([
             "id",
@@ -283,7 +284,7 @@ export async function down(knex: Knex): Promise<void> {
     ];
     
     for (const view of views) {
-        await knex.schema.dropView(view);
+        await knex.schema.dropViewIfExists(view);
     }
 }
 

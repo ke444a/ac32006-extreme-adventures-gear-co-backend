@@ -36,10 +36,11 @@ export async function up(knex: Knex): Promise<void> {
     // Create payroll table
     await knex.schema.createTable("payroll", (table) => {
         table.increments("id").primary();
-        table.integer("employee_id").unsigned().notNullable();
+        table.integer("employee_id").unsigned().nullable();
         table.integer("payment_id").unsigned().notNullable();
-        table.foreign("employee_id").references("employee.id");
-        table.foreign("payment_id").references("payment.id");
+
+        table.foreign("employee_id").references("employee.id").onUpdate("cascade").onDelete("set null");
+        table.foreign("payment_id").references("payment.id").onDelete("cascade");
     });
 
     // Create purchase table
@@ -47,14 +48,14 @@ export async function up(knex: Knex): Promise<void> {
         table.increments("id").primary();
         table.integer("branch_id").unsigned().notNullable();
         table.integer("customer_id").unsigned().nullable();
-        table.integer("employee_id").unsigned().notNullable();
+        table.integer("employee_id").unsigned().nullable();
         table.integer("payment_id").unsigned().notNullable();
         table.float("total_amount").notNullable();
         table.timestamp("purchase_date").defaultTo(knex.fn.now());
 
         table.foreign("branch_id").references("branch.id");
-        table.foreign("customer_id").references("customer.id");
-        table.foreign("employee_id").references("employee.id");
+        table.foreign("customer_id").references("customer.id").onUpdate("cascade").onDelete("set null");
+        table.foreign("employee_id").references("employee.id").onUpdate("cascade").onDelete("set null");
         table.foreign("payment_id").references("payment.id");
     });
 
@@ -66,7 +67,7 @@ export async function up(knex: Knex): Promise<void> {
         table.integer("quantity").notNullable();
         table.float("total_price").notNullable();
 
-        table.foreign("product_id").references("product.id");
+        table.foreign("product_id").references("product.id").onDelete("cascade").onUpdate("cascade");
         table.foreign("purchase_id").references("purchase.id");
     });
 }

@@ -1,21 +1,32 @@
-import { createPayment, updatePayment } from "@/queries/payments";
-import { getProductsByIds } from "@/queries/products";
 import { 
-    createPurchase, 
-    createPurchaseItems, 
-    getAllPurchasesByBranch, 
-    getPurchasesByBranchAndEmployee, 
-    getAllPurchaseItemsByPurchaseIds, 
-    updatePurchase, 
-    updatePurchaseItems, 
-    deletePurchase
+    createPaymentForPurchaseQuery, 
+    updatePaymentForPurchaseQuery 
+} from "@/queries/payments";
+import { getProductsByIdsQuery } from "@/queries/products";
+import { 
+    createPurchaseQuery, 
+    createPurchaseItemsQuery, 
+    getAllPurchasesByBranchQuery, 
+    getPurchasesByBranchAndEmployeeQuery, 
+    getAllPurchaseItemsByPurchaseIdsQuery, 
+    updatePurchaseQuery, 
+    updatePurchaseItemsQuery, 
+    deletePurchaseQuery,
+    getAllPurchasesQuery
 } from "@/queries/purchases";
-import { createCustomer } from "@/queries/customers";
+import { createCustomerQuery } from "@/queries/customers";
 
 
-class SalesService {
-    public async createPurchaseWithExistingCustomer(customerId: number, branchId: number, purchaseItems: IPurchaseItem[], employeeId: number, paymentMethod: PaymentMethod, paymentStatus: PaymentStatus) {
-        const storedProducts = await getProductsByIds(purchaseItems.map(item => item.productId));
+class PurchasesService {
+    public async createPurchaseWithExistingCustomer(
+        customerId: number, 
+        branchId: number, 
+        purchaseItems: IPurchaseItem[], 
+        employeeId: number, 
+        paymentMethod: PaymentMethodDB, 
+        paymentStatus: PaymentStatusDB
+    ) {
+        const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
             const product = storedProducts.find(product => product.id === item.productId);
             if (!product) {
@@ -24,13 +35,20 @@ class SalesService {
             return { ...item, pricePerUnit: product.price };
         });
         const totalPrice = purchaseItemWithPrice.reduce((acc, item) => acc + item.pricePerUnit * item.quantity, 0);
-        const paymentId = await createPayment("customer", paymentMethod, paymentStatus, totalPrice);
-        const purchaseId = await createPurchase(customerId, branchId, employeeId, paymentId, totalPrice);
-        await createPurchaseItems(purchaseItemWithPrice, purchaseId);
+        const paymentId = await createPaymentForPurchaseQuery("customer", paymentMethod, paymentStatus, totalPrice);
+        const purchaseId = await createPurchaseQuery(customerId, branchId, employeeId, paymentId, totalPrice);
+        await createPurchaseItemsQuery(purchaseItemWithPrice, purchaseId);
     }
 
-    public async createPurchaseWithNewCustomer(customer: ICustomer, branchId: number, purchaseItems: IPurchaseItem[], employeeId: number, paymentMethod: PaymentMethod, paymentStatus: PaymentStatus) {
-        const storedProducts = await getProductsByIds(purchaseItems.map(item => item.productId));
+    public async createPurchaseWithNewCustomer(
+        customer: RequestBodyPOST["CUSTOMER"], 
+        branchId: number, 
+        purchaseItems: IPurchaseItem[], 
+        employeeId: number, 
+        paymentMethod: PaymentMethodDB, 
+        paymentStatus: PaymentStatusDB
+    ) {
+        const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
             const product = storedProducts.find(product => product.id === item.productId);
             if (!product) {
@@ -39,32 +57,41 @@ class SalesService {
             return { ...item, pricePerUnit: product.price };
         });
         const totalPrice = purchaseItemWithPrice.reduce((acc, item) => acc + item.pricePerUnit * item.quantity, 0);
-        const customerId = await createCustomer(customer);
-        const paymentId = await createPayment("customer", paymentMethod, paymentStatus, totalPrice);
-        const purchaseId = await createPurchase(customerId, branchId, employeeId, paymentId, totalPrice);
-        await createPurchaseItems(purchaseItemWithPrice, purchaseId);
+        const customerId = await createCustomerQuery(customer);
+        const paymentId = await createPaymentForPurchaseQuery("customer", paymentMethod, paymentStatus, totalPrice);
+        const purchaseId = await createPurchaseQuery(customerId, branchId, employeeId, paymentId, totalPrice);
+        await createPurchaseItemsQuery(purchaseItemWithPrice, purchaseId);
     }
 
     public async getAllPurchasesByBranch(branchId: number) {
-        const purchases = await getAllPurchasesByBranch(branchId);
-        const purchaseItems = await getAllPurchaseItemsByPurchaseIds(purchases.map(purchase => purchase.purchase_id));
+        const purchases = await getAllPurchasesByBranchQuery(branchId);
+        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.id));
         const purchasesWithItems = purchases.map(purchase => {
-            return { ...purchase, purchaseItems: purchaseItems.filter(item => item.purchase_id === purchase.purchase_id) };
+            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.id) };
         });
         return purchasesWithItems;
     }
 
     public async getPurchasesByBranchAndEmployee(branchId: number, employeeId: number) {
-        const purchases = await getPurchasesByBranchAndEmployee(branchId, employeeId);
-        const purchaseItems = await getAllPurchaseItemsByPurchaseIds(purchases.map(purchase => purchase.purchase_id));
+        const purchases = await getPurchasesByBranchAndEmployeeQuery(branchId, employeeId);
+        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.id));
         const purchasesWithItems = purchases.map(purchase => {
-            return { ...purchase, purchaseItems: purchaseItems.filter(item => item.purchase_id === purchase.purchase_id) };
+            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.id) };
         });
         return purchasesWithItems;
     }
 
-    public async updatePurchase(purchaseId: number, purchaseItems: IPurchaseItem[], paymentStatus: PaymentStatus) {
-        const storedProducts = await getProductsByIds(purchaseItems.map(item => item.productId));
+    public async getAllPurchases() {
+        const purchases = await getAllPurchasesQuery();
+        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.purchase_id));
+        const purchasesWithItems = purchases.map(purchase => {
+            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.purchase_id) };
+        });
+        return purchasesWithItems;
+    }
+
+    public async updatePurchase(purchaseId: number, purchaseItems: IPurchaseItem[], paymentStatus: PaymentStatusDB) {
+        const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
             const product = storedProducts.find(product => product.id === item.productId);
             if (!product) {
@@ -75,15 +102,15 @@ class SalesService {
 
         const updatedTotalPrice = purchaseItemWithPrice.reduce((acc, item) => acc + item.pricePerUnit * item.quantity, 0);
         await Promise.all([
-            updatePayment(purchaseId, paymentStatus),
-            updatePurchase(purchaseId, updatedTotalPrice),
-            updatePurchaseItems(purchaseItemWithPrice, purchaseId)
+            updatePaymentForPurchaseQuery(purchaseId, paymentStatus),
+            updatePurchaseQuery(purchaseId, updatedTotalPrice),
+            updatePurchaseItemsQuery(purchaseItemWithPrice, purchaseId)
         ]);
     }
 
     public async deletePurchase(purchaseId: number) {
-        await deletePurchase(purchaseId);
+        await deletePurchaseQuery(purchaseId);
     }
 }
 
-export default new SalesService();
+export default new PurchasesService();

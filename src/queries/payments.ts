@@ -1,8 +1,8 @@
 import knex from "@/config/db";
-import { SalesRepresentativeViews } from "@/config/enums";
+import { AdminViews, SalesRepresentativeViews } from "@/config/enums";
 
-const createPayment = async (paymentType: PaymentType, paymentMethod: PaymentMethod, paymentStatus: PaymentStatus, amount: number) => {
-    const [paymentId] = await knex("payment").insert({
+const createPaymentForPurchaseQuery = async (paymentType: PaymentTypeDB, paymentMethod: PaymentMethodDB, paymentStatus: PaymentStatusDB, amount: number) => {
+    const [paymentId] = await knex<ISalesRepModifyPaymentView>(SalesRepresentativeViews.MODIFY_PAYMENT).insert({
         payment_type: paymentType,
         payment_method: paymentMethod,
         payment_status: paymentStatus,
@@ -11,16 +11,65 @@ const createPayment = async (paymentType: PaymentType, paymentMethod: PaymentMet
     return paymentId;
 };
 
-const updatePayment = async (paymentId: number, paymentStatus: PaymentStatus) => {
-    await knex(SalesRepresentativeViews.MODIFY_PAYMENT).where("id", paymentId).update({ payment_status: paymentStatus });
+const createPaymentForPayrollQuery = async (paymentType: PaymentTypeDB, paymentMethod: PaymentMethodDB, paymentStatus: PaymentStatusDB, amount: number) => {
+    const [paymentId] = await knex<IAdminModifyPaymentView>(SalesRepresentativeViews.MODIFY_PAYMENT).insert({
+        payment_type: paymentType,
+        payment_method: paymentMethod,
+        payment_status: paymentStatus,
+        amount: amount
+    });
+    return paymentId;
 };
 
-const getPaymentById = async (paymentId: number) => {
-    return await knex("payment").where("id", paymentId).first<IPaymentDatabase>();
+const updatePaymentForPurchaseQuery = async (paymentId: number, paymentStatus: PaymentStatusDB) => {
+    await knex<ISalesRepModifyPaymentView>(SalesRepresentativeViews.MODIFY_PAYMENT)
+        .where("id", paymentId)
+        .update({ payment_status: paymentStatus });
 };
+
+const getAllPayrollsQuery = async () => {
+    return await knex<IAdminAllPayrollsView>(AdminViews.ALL_PAYROLLS);
+};
+
+const createPayrollQuery = async (employeeId: number, paymentId: number) => {
+    return await knex<IAdminModifyPayrollView>(AdminViews.MODIFY_PAYROLL).insert({
+        employee_id: employeeId,
+        payment_id: paymentId
+    });
+};
+
+const getPaymentIdByPayrollQuery = async (payrollId: number): Promise<number> => {
+    const [{ payment_id }] = await knex<IAdminModifyPayrollView>(AdminViews.MODIFY_PAYROLL)
+        .where("id", payrollId)
+        .select("payment_id");
+
+    return payment_id;
+};
+
+const updatePaymentQuery = async (payrollId: number, paymentData: Partial<IAdminModifyPaymentView>) => {
+    return await knex<IAdminModifyPayrollView>(AdminViews.MODIFY_PAYMENT)
+        .where("id", payrollId)
+        .update(paymentData);
+};
+
+const deletePayrollQuery = async (payrollId: number) => {
+    await knex<IAdminModifyPayrollView>(AdminViews.MODIFY_PAYROLL)
+        .where("id", payrollId)
+        .delete();
+};
+
+const getAllPaymentsQuery = async () => {
+    return await knex<IAdminAllPaymentsView>(AdminViews.ALL_PAYMENTS);
+}; 
 
 export {
-    createPayment,
-    updatePayment,
-    getPaymentById
+    createPaymentForPurchaseQuery,
+    updatePaymentForPurchaseQuery,
+    getAllPayrollsQuery,
+    createPayrollQuery,
+    updatePaymentQuery,
+    deletePayrollQuery,
+    getAllPaymentsQuery,
+    createPaymentForPayrollQuery,
+    getPaymentIdByPayrollQuery
 };

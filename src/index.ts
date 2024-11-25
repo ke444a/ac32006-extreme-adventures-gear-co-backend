@@ -8,6 +8,7 @@ import employeesRouter from "./routes/employees";
 import inventoryRouter from "./routes/inventory";
 import shipmentsRouter from "./routes/shipments";
 import factoryProductsRouter from "./routes/factory-products";
+import paymentsRouter from "./routes/payments";
 
 const app = ExpressConfig();
 
@@ -19,6 +20,7 @@ app.use("/inventory", inventoryRouter);
 app.use("/shipments", shipmentsRouter);
 app.use("/factory-products", factoryProductsRouter);
 app.use("/employees", employeesRouter);
+app.use("/payments", paymentsRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

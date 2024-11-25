@@ -1,18 +1,19 @@
 import { 
-    getAllShipmentsForBranch, 
-    getShipmentItemsByShipmentIds, 
-    getUpcomingShipmentsForBranch, 
-    updateShipmentStatusForBranch,
-    updateShipmentStatusForFactory,
-    createShipment,
-    createShipmentItems,
-    getAllShipmentsForFactory
+    getAllShipmentsForBranchQuery, 
+    getShipmentItemsByShipmentIdsQuery, 
+    getUpcomingShipmentsForBranchQuery, 
+    updateShipmentStatusForBranchQuery,
+    updateShipmentStatusForFactoryQuery,
+    createShipmentQuery,
+    createShipmentItemsQuery,
+    getAllShipmentsForFactoryQuery
 } from "@/queries/shipments";
+
 
 class ShipmentsService {
     public async getAllShipmentsByBranch(branchId: number) {
-        const shipments = await getAllShipmentsForBranch(branchId);
-        const shipmentItems = await getShipmentItemsByShipmentIds(shipments.map(shipment => shipment.shipment_id));
+        const shipments = await getAllShipmentsForBranchQuery(branchId);
+        const shipmentItems = await getShipmentItemsByShipmentIdsQuery(shipments.map(shipment => shipment.shipment_id));
         const shipmentsWithItems = shipments.map(shipment => {
             const items = shipmentItems.filter(item => item.shipment_id === shipment.shipment_id);
             return { ...shipment, items };
@@ -21,8 +22,8 @@ class ShipmentsService {
     }
 
     public async getUpcomingShipmentsByBranch(branchId: number) {
-        const shipments = await getUpcomingShipmentsForBranch(branchId);
-        const shipmentItems = await getShipmentItemsByShipmentIds(shipments.map(shipment => shipment.shipment_id));
+        const shipments = await getUpcomingShipmentsForBranchQuery(branchId);
+        const shipmentItems = await getShipmentItemsByShipmentIdsQuery(shipments.map(shipment => shipment.shipment_id));
         const shipmentsWithItems = shipments.map(shipment => {
             const items = shipmentItems.filter(item => item.shipment_id === shipment.shipment_id);
             return { ...shipment, items };
@@ -30,25 +31,25 @@ class ShipmentsService {
         return shipmentsWithItems;
     }
 
-    public async updateShipmentStatusForBranch(shipmentId: number, status: ShipmentStatus) {
-        return await updateShipmentStatusForBranch(shipmentId, status);
+    public async updateShipmentStatusForBranch(shipmentId: number, status: ShipmentStatusDB) {
+        return await updateShipmentStatusForBranchQuery(shipmentId, status);
     }
 
-    public async updateShipmentStatusForFactory(shipmentId: number, status: ShipmentStatus, branchId: number) {
-        return await updateShipmentStatusForFactory(shipmentId, status, branchId);
+    public async updateShipmentStatusForFactory(shipmentId: number, status: ShipmentStatusDB, branchId: number) {
+        return await updateShipmentStatusForFactoryQuery(shipmentId, status, branchId);
     }
 
     public async createShipment(factoryId: number, branchId: number, shipmentItems: IShipmentItem[]) {
-        const shipmentId = await createShipment(factoryId, branchId);
-        await createShipmentItems(shipmentId, shipmentItems);
+        const shipmentId = await createShipmentQuery(factoryId, branchId);
+        await createShipmentItemsQuery(shipmentId, shipmentItems);
     }
 
     public async getAllShipmentsByFactory(factoryId: number) {
-        const storedShipments = await getAllShipmentsForFactory(factoryId);
-        const shipmentItems = await getShipmentItemsByShipmentIds(storedShipments.map(shipment => shipment.shipment_id));
+        const storedShipments = await getAllShipmentsForFactoryQuery(factoryId);
+        const shipmentItems = await getShipmentItemsByShipmentIdsQuery(storedShipments.map(shipment => shipment.shipment_id));
         const shipmentsWithItems = storedShipments.map(shipment => {
             const items = shipmentItems.filter(item => item.shipment_id === shipment.shipment_id);
-            return { ...shipment, shipment_items: items };
+            return { ...shipment, items };
         });
         return shipmentsWithItems;
     }

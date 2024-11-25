@@ -31,12 +31,12 @@ export const updateBranchItemQuantity = async (req: Request, res: Response) => {
     try {
         const branchItemId = parseInt(req.params.branchItemId);
         const { quantity } = req.body;
-        if (quantity === undefined) {
+        if (quantity === undefined || quantity === null) {
             res.status(400).json(<APIResponse>{ message: "Missing required fields", status: ResponseStatus.INVALID_REQUEST_BODY });
             return;
         }
         await InventoryService.updateBranchItemQuantity(branchItemId, quantity);
-        res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS });
+        res.status(200).json(<APIResponse>{ message: "Branch item quantity updated successfully", status: ResponseStatus.SUCCESS });
     } catch (error) {
         console.log(error);
         res.status(500).json(<APIResponse>{ message: "Internal server error", status: ResponseStatus.INTERNAL_SERVER_ERROR });

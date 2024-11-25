@@ -1,20 +1,25 @@
-import { createNewBranchItem, deleteBranchItem, getBranchItemsByBranch, updateBranchItemQuantity } from "@/queries/inventory";
+import { 
+    createNewBranchItemQuery, 
+    deleteBranchItemQuery, 
+    getBranchItemsByBranchQuery, 
+    updateBranchItemQuantityQuery 
+} from "@/queries/inventory";
 
 class InventoryService {
     public async getBranchItemsByBranch(branchId: number) {
-        return await getBranchItemsByBranch(branchId);
+        return await getBranchItemsByBranchQuery(branchId);
     }
 
     public async createNewBranchItem(branchId: number, productId: number, quantity: number) {
-        return await createNewBranchItem(branchId, productId, quantity);
+        return await createNewBranchItemQuery(branchId, productId, quantity);
     }
 
     public async updateBranchItemQuantity(branchItemId: number, quantity: number) {
-        return await updateBranchItemQuantity(branchItemId, quantity);
+        return await updateBranchItemQuantityQuery(branchItemId, quantity);
     }
 
     public async deleteBranchItem(branchItemId: number) {
-        return await deleteBranchItem(branchItemId);
+        return await deleteBranchItemQuery(branchItemId);
     }
 }
 

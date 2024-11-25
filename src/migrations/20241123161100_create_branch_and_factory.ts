@@ -12,6 +12,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments("id").primary();
         table.integer("location_id").unsigned().notNullable();
         table.float("production_target").notNullable();
+
         table.foreign("location_id").references("location.id");
     });
 
@@ -21,6 +22,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("name").notNullable();
         table.float("sales_target").notNullable();
         table.integer("location_id").unsigned().notNullable();
+        
         table.foreign("location_id").references("location.id");
     });
 }

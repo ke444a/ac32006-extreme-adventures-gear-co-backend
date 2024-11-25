@@ -1,25 +1,25 @@
 import { 
-    createFactoryProductItem,
-    getAllFactoryProductItems,
-    updateFactoryProductItem,
-    deleteFactoryProductItem
+    createFactoryProductItemQuery,
+    getAllFactoryProductItemsQuery,
+    updateFactoryProductItemQuery,
+    deleteFactoryProductItemQuery
 } from "@/queries/factory-products";
 
 class FactoryProductsService {
     public async createFactoryProduct(factoryId: number, productId: number, quantity: number) {
-        return await createFactoryProductItem(factoryId, productId, quantity);
+        return await createFactoryProductItemQuery(factoryId, productId, quantity);
     }
 
     public async getAllFactoryProducts(factoryId: number) {
-        return await getAllFactoryProductItems(factoryId);
+        return await getAllFactoryProductItemsQuery(factoryId);
     }
 
     public async updateFactoryProduct(factoryProductId: number, factoryProductQuantity: number, manufacturedAt: Date) {
-        return await updateFactoryProductItem(factoryProductId, factoryProductQuantity, manufacturedAt);
+        return await updateFactoryProductItemQuery(factoryProductId, factoryProductQuantity, manufacturedAt);
     }
 
     public async deleteFactoryProduct(factoryProductId: number) {
-        return await deleteFactoryProductItem(factoryProductId);
+        return await deleteFactoryProductItemQuery(factoryProductId);
     }
 }
 

@@ -1,7 +1,7 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-    // View for branch items (CREATE/UPDATE)
+    // Insert/delete/update branch item
     await knex.schema.createView("inventory_manager_modify_branch_item_view", (view) => {
         view.columns([
             "id",
@@ -22,8 +22,8 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for branch items in specific branch
-    await knex.schema.createView("inventory_manager_all_branch_items_in_branch_view", (view) => {
+    // View all branch items in specific branch
+    await knex.schema.createView("inventory_manager_branch_items_in_branch_view", (view) => {
         view.columns([
             "branch_item_id",
             "branch_id",
@@ -56,7 +56,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for all shipments to specific branch
+    // View all shipments to specific branch
     await knex.schema.createView("inventory_manager_all_shipments_to_branch_view", (view) => {
         view.columns([
             "shipment_id",
@@ -95,7 +95,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for upcoming shipments to branch
+    // View upcoming shipments to specific branch
     await knex.schema.createView("inventory_manager_upcoming_shipments_to_branch_view", (view) => {
         view.columns([
             "shipment_id",
@@ -137,7 +137,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for shipment items
+    // View shipment items for specific shipment
     await knex.schema.createView("inventory_manager_shipment_details_view", (view) => {
         view.columns([
             "shipment_id",
@@ -161,14 +161,14 @@ export async function up(knex: Knex): Promise<void> {
                 .from("shipment as s")
                 .join("shipment_item as si", "s.id", "si.shipment_id")
                 .join("factory_product_item as fpi", "si.factory_product_id", "fpi.id")
-                .join("product as p", "fpi.product_id", "p.id")
-                .join("product_category as pc", "p.product_category_id", "pc.id")
+                .leftJoin("product as p", "fpi.product_id", "p.id")
+                .leftJoin("product_category as pc", "p.product_category_id", "pc.id")
                 .orderBy("s.id")
                 .orderBy("p.name")
         );
     });
 
-    // View to update shipment status
+    // Update shipment status when delivered
     await knex.schema.createView("inventory_manager_update_shipment_status_view", (view) => {
         view.columns([
             "id",
@@ -188,10 +188,16 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.dropView("inventory_manager_modify_branch_item_view");
-    await knex.schema.dropView("inventory_manager_all_branch_items_in_branch_view");
-    await knex.schema.dropView("inventory_manager_all_shipments_to_branch_view");
-    await knex.schema.dropView("inventory_manager_upcoming_shipments_to_branch_view");
-    await knex.schema.dropView("inventory_manager_shipment_details_view");
-    await knex.schema.dropView("inventory_manager_update_shipment_status_view");
+    const views = [
+        "inventory_manager_modify_branch_item_view",
+        "inventory_manager_branch_items_in_branch_view",
+        "inventory_manager_all_shipments_to_branch_view",
+        "inventory_manager_upcoming_shipments_to_branch_view",
+        "inventory_manager_shipment_details_view",
+        "inventory_manager_update_shipment_status_view"
+    ];
+
+    for (const view of views) {
+        await knex.schema.dropViewIfExists(view);
+    }
 }

@@ -24,10 +24,10 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("shipment_item", (table) => {
         table.increments("id").primary();
         table.integer("shipment_id").unsigned().notNullable();
-        table.integer("factory_product_id").unsigned().notNullable();
+        table.integer("factory_product_id").unsigned().nullable();
         table.integer("quantity_shipped").notNullable();
 
-        table.foreign("shipment_id").references("shipment.id");
+        table.foreign("shipment_id").references("shipment.id").onDelete("cascade").onUpdate("cascade");
         table.foreign("factory_product_id").references("factory_product_item.id");
     });
 }

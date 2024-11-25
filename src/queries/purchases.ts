@@ -1,8 +1,8 @@
 import knex from "@/config/db";
-import { SalesRepresentativeViews } from "@/config/enums";
+import { AdminViews, SalesRepresentativeViews } from "@/config/enums";
 
-const createPurchase = async (customerId: number, branchId: number, employeeId: number, paymentId: number, totalAmount: number) => {
-    const [purchaseId] = await knex(SalesRepresentativeViews.MODIFY_PURCHASE).insert({
+const createPurchaseQuery = async (customerId: number, branchId: number, employeeId: number, paymentId: number, totalAmount: number) => {
+    const [purchaseId] = await knex<ISalesRepModifyPurchaseView>(SalesRepresentativeViews.MODIFY_PURCHASE).insert({
         customer_id: customerId,
         branch_id: branchId,
         employee_id: employeeId,
@@ -12,12 +12,12 @@ const createPurchase = async (customerId: number, branchId: number, employeeId: 
     return purchaseId;
 };
 
-const updatePurchase = async (purchaseId: number, totalAmount: number) => {
-    await knex(SalesRepresentativeViews.MODIFY_PURCHASE).where("id", purchaseId).update({ total_amount: totalAmount });
+const updatePurchaseQuery = async (purchaseId: number, totalAmount: number) => {
+    await knex<ISalesRepModifyPurchaseView>(SalesRepresentativeViews.MODIFY_PURCHASE).where("id", purchaseId).update({ total_amount: totalAmount });
 };
 
-const createPurchaseItems = async (purchaseItems: (IPurchaseItem & { pricePerUnit: number })[], purchaseId: number) => {
-    await knex(SalesRepresentativeViews.MODIFY_PURCHASE_ITEM).insert(purchaseItems.map((item) => ({
+const createPurchaseItemsQuery = async (purchaseItems: (IPurchaseItem & { pricePerUnit: number })[], purchaseId: number) => {
+    await knex<ISalesRepModifyPurchaseItemView>(SalesRepresentativeViews.MODIFY_PURCHASE_ITEM).insert(purchaseItems.map((item) => ({
         product_id: item.productId,
         purchase_id: purchaseId,
         quantity: item.quantity,
@@ -25,36 +25,41 @@ const createPurchaseItems = async (purchaseItems: (IPurchaseItem & { pricePerUni
     })));
 };
 
-const updatePurchaseItems = async (purchaseItems: (IPurchaseItem & { pricePerUnit: number })[], purchaseId: number) => {
-    await knex(SalesRepresentativeViews.MODIFY_PURCHASE_ITEM).where("purchase_id", purchaseId).update(purchaseItems.map((item) => ({
+const updatePurchaseItemsQuery = async (purchaseItems: (IPurchaseItem & { pricePerUnit: number })[], purchaseId: number) => {
+    await knex<ISalesRepModifyPurchaseItemView>(SalesRepresentativeViews.MODIFY_PURCHASE_ITEM).where("purchase_id", purchaseId).update(purchaseItems.map((item) => ({
         quantity: item.quantity,
         total_price: item.pricePerUnit * item.quantity
     })));
 };
 
-const getAllPurchasesByBranch = async (branchId: number) => {
-    return await knex(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId);
+const getAllPurchasesByBranchQuery = async (branchId: number) => {
+    return await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId);
 };
 
-const getPurchasesByBranchAndEmployee = async (branchId: number, employeeId: number) => {
-    return await knex(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId).andWhere("sales_rep_id", employeeId);
+const getPurchasesByBranchAndEmployeeQuery = async (branchId: number, employeeId: number) => {
+    return await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId).andWhere("sales_rep_id", employeeId);
 };
 
-const getAllPurchaseItemsByPurchaseIds = async (purchaseIds: number[]) => {
-    return await knex(SalesRepresentativeViews.PURCHASE_DETAILS).whereIn("purchase_id", purchaseIds);
+const getAllPurchaseItemsByPurchaseIdsQuery = async (purchaseIds: number[]) => {
+    return await knex<ISalesRepPurchaseDetailsView>(SalesRepresentativeViews.PURCHASE_DETAILS).whereIn("purchase_id", purchaseIds);
 };
 
-const deletePurchase = async (purchaseId: number) => {
-    await knex(SalesRepresentativeViews.PURCHASE_SUMMARY).where("id", purchaseId).delete();
+const deletePurchaseQuery = async (purchaseId: number) => {
+    await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("id", purchaseId).delete();
+};
+
+const getAllPurchasesQuery = async () => {
+    return await knex<IAdminAllPurchasesView>(AdminViews.ALL_PURCHASES);
 };
 
 export {
-    createPurchase,
-    createPurchaseItems,
-    getAllPurchasesByBranch,
-    getPurchasesByBranchAndEmployee,
-    getAllPurchaseItemsByPurchaseIds,
-    updatePurchase,
-    updatePurchaseItems,
-    deletePurchase
+    createPurchaseQuery,
+    createPurchaseItemsQuery,
+    getAllPurchasesByBranchQuery,
+    getPurchasesByBranchAndEmployeeQuery,
+    getAllPurchaseItemsByPurchaseIdsQuery,
+    updatePurchaseQuery,
+    updatePurchaseItemsQuery,
+    deletePurchaseQuery,
+    getAllPurchasesQuery
 };

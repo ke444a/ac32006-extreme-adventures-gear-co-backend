@@ -13,6 +13,10 @@
 - Delete customer details
 - Delete purchase details
     * They can only delete purchases that are associated with their branch
+- View all products available in their branch
+- Modify product details
+    * Allow to modify only products that are available in their branch
+    * Forbid to modify product price
 
 
 ### Inventory manager
@@ -44,11 +48,12 @@
 - Create new employee
 - Create new payroll for employees
 - View all employees
-- View payrolls
+- View all payrolls
 - View all payments
+    * Ability to filter payments by type
 - View all purchases
     * Ability to filter out purchases by branch and/or sales rep
-- Update payrolls
+- Update payments
 - Update employee details
 - Delete payrolls
 - Delete employee

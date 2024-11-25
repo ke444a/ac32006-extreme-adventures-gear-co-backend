@@ -4,7 +4,7 @@
 import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-    // View for all customers
+    // View all customers for all branches
     await knex.schema.createView("sales_represenative_all_customers_view", (view) => {
         view.columns([
             "customer_id",
@@ -41,7 +41,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for customers who made purchases in specific branch
+    // View all customers who made purchases in specific branch
     await knex.schema.createView("sales_represenative_branch_customers_view", (view) => {
         view.columns([
             "customer_id",
@@ -50,9 +50,9 @@ export async function up(knex: Knex): Promise<void> {
             "email",
             "address",
             "joined_at",
-            "branch_id",
             "last_purchase_date",
-            "total_purchases"
+            "total_purchases",
+            "branch_id"
         ]);
         view.as(
             knex.select([
@@ -62,9 +62,9 @@ export async function up(knex: Knex): Promise<void> {
                 "c.email",
                 "c.address",
                 "c.joined_at",
-                "p.branch_id",
                 knex.raw("MAX(p.purchase_date) as last_purchase_date"),
-                knex.raw("COUNT(p.id) as total_purchases")
+                knex.raw("COUNT(p.id) as total_purchases"),
+                "p.branch_id"
             ])
                 .from("customer as c")
                 .leftJoin("purchase as p", "c.id", "p.customer_id")
@@ -81,7 +81,7 @@ export async function up(knex: Knex): Promise<void> {
         );
     });
 
-    // View for purchase summary
+    // View purchase summary: info about each purchase without purchase items
     await knex.schema.createView("sales_represenative_purchase_summary_view", (view) => {
         view.columns([
             "id",
@@ -100,8 +100,8 @@ export async function up(knex: Knex): Promise<void> {
                 "c.name as customer_name",
                 "c.email as customer_email",
                 "p.total_amount as total_price",
-                "p.purchase_date",
                 "pay.payment_status",
+                "p.purchase_date",
                 "p.branch_id",
                 "e.id as sales_rep_id",
                 "e.name as sales_rep_name"
@@ -109,12 +109,12 @@ export async function up(knex: Knex): Promise<void> {
                 .from("purchase as p")
                 .leftJoin("customer as c", "p.customer_id", "c.id")
                 .join("payment as pay", "p.payment_id", "pay.id")
-                .join("employee as e", "p.employee_id", "e.id")
+                .leftJoin("employee as e", "p.employee_id", "e.id")
                 .orderBy("p.purchase_date", "desc")
         );
     });
 
-    // View for purchase items and their details
+    // View purchase items for purchase
     await knex.schema.createView("sales_represenative_purchase_details_view", (view) => {
         view.columns([
             "purchase_id",
@@ -137,12 +137,12 @@ export async function up(knex: Knex): Promise<void> {
             ])
                 .from("purchase as p")
                 .join("purchase_item as pi", "p.id", "pi.purchase_id")
-                .join("product as prod", "pi.product_id", "prod.id")
+                .leftJoin("product as prod", "pi.product_id", "prod.id")
                 .orderBy("pi.total_price", "desc")
         );
     });
 
-    // View for customers (CREATE/UPDATE)
+    // Insert/delete/update data about customers
     await knex.schema.createView("sales_represenative_modify_customer_view", (view) => {
         view.columns([
             "id",
@@ -164,9 +164,10 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for payments (CREATE/UPDATE)
+    // Insert/delete/update data about payments
     await knex.schema.createView("sales_represenative_modify_payment_view", (view) => {
         view.columns([
+            "id",
             "payment_type",
             "payment_method",
             "payment_status",
@@ -174,6 +175,7 @@ export async function up(knex: Knex): Promise<void> {
         ]);
         view.as(
             knex.select([
+                "id",
                 "payment_type",
                 "payment_method",
                 "payment_status",
@@ -186,7 +188,7 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for purchases (CREATE/UPDATE)
+    // Insert/delete/update data about purchases
     await knex.schema.createView("sales_represenative_modify_purchase_view", (view) => {
         view.columns([
             "customer_id",
@@ -208,7 +210,7 @@ export async function up(knex: Knex): Promise<void> {
         view.checkOption();
     });
 
-    // View for purchase items (CREATE/UPDATE)
+    // Insert/delete/update data about purchase items
     await knex.schema.createView("sales_represenative_modify_purchase_item_view", (view) => {
         view.columns([
             "purchase_id",
@@ -227,6 +229,59 @@ export async function up(knex: Knex): Promise<void> {
         );
         view.checkOption();
     });
+    
+    // Update data about products (product name, description, or warranty duration)
+    await knex.schema.createView("sales_representative_modify_product_view", (view) => {
+        view.columns([
+            "id",
+            "name",
+            "description",
+            "warranty_duration"
+        ]);
+        view.as(
+            knex.select([
+                "id",
+                "name",
+                "description",
+                "warranty_duration"
+            ])
+                .whereNot("name", null)
+                .andWhereNot("description", null)
+                .andWhereNot("warranty_duration", null)
+                .from("product")
+        );
+        view.checkOption();
+    });
+
+    // View for products available in specific branch
+    await knex.schema.createView("sales_representative_branch_products_view", (view) => {
+        view.columns([
+            "product_id",
+            "name",
+            "description",
+            "image_url",
+            "price",
+            "warranty_duration",
+            "branch_id",
+            "updated_at"
+        ]);
+        view.as(
+            knex.select([
+                "p.id as product_id",
+                "p.name",
+                "p.description",
+                "p.image_url",
+                "p.price",
+                "p.warranty_duration",
+                "bi.branch_id",
+                "p.updated_at"
+            ])
+                .from("product as p")
+                .innerJoin("branch_item as bi", "bi.product_id", "p.id")
+                .orderBy("p.updated_at", "desc")
+        );
+        view.checkOption();
+    });
 }
 
 export async function down(knex: Knex): Promise<void> {
@@ -238,7 +293,9 @@ export async function down(knex: Knex): Promise<void> {
         "sales_represenative_modify_customer_view",
         "sales_represenative_modify_payment_view",
         "sales_represenative_modify_purchase_view",
-        "sales_represenative_modify_purchase_item_view"
+        "sales_represenative_modify_purchase_item_view",
+        "sales_representative_modify_product_view",
+        "sales_representative_branch_products_view"
     ];
     for (const view of views) {
         await knex.schema.dropViewIfExists(view);
