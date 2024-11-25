@@ -32,6 +32,10 @@ const updateCustomer = async (customerId: number, customer: ICustomer): Promise<
 };
 
 const deleteCustomer = async (customerId: number): Promise<void> => {
+    await knex<IPurchaseDatabase>("purchase")
+        .where("customer_id", customerId)
+        .update({ customer_id: null });
+
     await knex<ICustomerDatabase>(SalesRepresentativeViews.MODIFY_CUSTOMER)
         .where("id", customerId)
         .delete();

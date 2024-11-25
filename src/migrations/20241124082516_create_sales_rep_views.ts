@@ -28,7 +28,7 @@ export async function up(knex: Knex): Promise<void> {
                 knex.raw("COUNT(p.id) as total_purchases")
             ])
                 .from("customer as c")
-                .join("purchase as p", "c.id", "p.customer_id")
+                .leftJoin("purchase as p", "c.id", "p.customer_id")
                 .groupBy(
                     "c.id",
                     "c.name",
@@ -67,7 +67,7 @@ export async function up(knex: Knex): Promise<void> {
                 knex.raw("COUNT(p.id) as total_purchases")
             ])
                 .from("customer as c")
-                .join("purchase as p", "c.id", "p.customer_id")
+                .leftJoin("purchase as p", "c.id", "p.customer_id")
                 .groupBy(
                     "c.id",
                     "c.name",
@@ -107,7 +107,7 @@ export async function up(knex: Knex): Promise<void> {
                 "e.name as sales_rep_name"
             ])
                 .from("purchase as p")
-                .join("customer as c", "p.customer_id", "c.id")
+                .leftJoin("customer as c", "p.customer_id", "c.id")
                 .join("payment as pay", "p.payment_id", "pay.id")
                 .join("employee as e", "p.employee_id", "e.id")
                 .orderBy("p.purchase_date", "desc")
@@ -241,6 +241,6 @@ export async function down(knex: Knex): Promise<void> {
         "sales_represenative_modify_purchase_item_view"
     ];
     for (const view of views) {
-        await knex.schema.dropView(view);
+        await knex.schema.dropViewIfExists(view);
     }
 }

@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { getAllCustomers, getCustomersByBranch, updateCustomer, deleteCustomer } from "@/controllers/customers";
-import { verifyRole } from "@/middleware/verifyRole";
+import { verifyRoles } from "@/middleware/verifyRoles";
 import { verifyBranch } from "@/middleware/verifyBranch";
+import { EmployeeRole } from "@/config/enums";
 
 const customersRouter = Router();
 
-customersRouter.get("/", verifyRole("sales_representative"), verifyBranch(), getAllCustomers);
-customersRouter.get("/branch", verifyRole("sales_representative"), verifyBranch(), getCustomersByBranch);
-customersRouter.patch("/:customerId", verifyRole("sales_representative"), verifyBranch(), updateCustomer);
-customersRouter.delete("/:customerId", verifyRole("sales_representative"), verifyBranch(), deleteCustomer);
+customersRouter.get("/", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), getAllCustomers);
+customersRouter.get("/branch", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), getCustomersByBranch);
+customersRouter.patch("/:customerId", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), updateCustomer);
+customersRouter.delete("/:customerId", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), deleteCustomer);
 
 export default customersRouter;

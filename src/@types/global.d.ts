@@ -16,7 +16,7 @@ declare global {
 
     // DUMPING TYPES HERE FOR NOW
 
-    type EmployeeRole = "sales_representative" | "inventory_manager" | "admin" | "factory_manager" | "factory_worker";
+    type IEmployeeRole = "sales_representative" | "inventory_manager" | "admin" | "factory_manager" | "factory_worker";
 
     interface IEmployee {
         id: number;
@@ -30,6 +30,17 @@ declare global {
         location_id: number;
         role: EmployeeRole;
         branch_id?: number;
+        factory_id?: number;
+    }
+
+    interface IEmployeeChange {
+        name?: string;
+        phoneNumber?: string;
+        age?: number;
+        salary?: number;
+        employmentType?: "full_time" | "part_time";
+        hireDate?: string;
+        workScheduleId?: number;
     }
 
     interface IPurchaseItem {
@@ -65,5 +76,21 @@ declare global {
     }
 
     type ShipmentStatus = "preparing_to_ship" | "in_transit" | "shipped" | "delivered";
+    interface IShipmentItem {
+        factoryProductId: number;
+        quantityShipped: number;
+    }
+
+    interface IFactoryProduct {
+        id: number;
+        factory_id: number;
+        product_id: number;
+        quantity: number;
+        manufactured_at: Date;
+        created_at: Date;
+        updated_at: Date;
+        product_name?: string;
+        product_description?: string;
+    }
 }
 

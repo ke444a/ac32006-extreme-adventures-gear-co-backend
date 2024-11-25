@@ -83,3 +83,87 @@ interface IInventoryManagerUpdateShipmentView {
     shipment_status: string;
     arrived_at: Date | null;
 }
+
+/**
+ * Views created for factory managers
+ */
+
+// View for all shipments from factory
+interface IFactoryManagerShipmentsView {
+    shipment_id: number;
+    branch_id: number;
+    branch_name: string;
+    branch_city: string;
+    shipment_status: "preparing_to_ship" | "in_transit" | "shipped" | "delivered";
+    shipped_at: Date | null;
+    arrived_at: Date | null;
+    total_items: number;
+}
+
+// View for all manufactured products
+interface IFactoryManagerManufacturedProductsView {
+    factory_product_id: number;
+    product_id: number;
+    product_name: string;
+    product_image_url: string;
+    product_category: string;
+    quantity: number;
+    manufactured_at: Date;
+}
+
+// View for all employees in factory
+interface IFactoryManagerFactoryEmployeesView {
+    employee_id: number;
+    name: string;
+    role: string;
+    phone_number: string;
+    age: number;
+    salary: number;
+    hire_date: Date;
+    employment_type: "full_time" | "part_time";
+    shift_type: string;
+    shift_start: Date;
+    shift_end: Date;
+    factory_id: number;
+}
+
+// View for shipment details with manufacturing info
+interface IFactoryManagerShipmentDetailsView {
+    shipment_id: number;
+    product_id: number;
+    product_name: string;
+    product_category: string;
+    quantity_shipped: number;
+    manufactured_at: Date;
+    manufactured_batch_id: number;
+    total_manufactured_in_batch: number;
+    remaining_in_factory: number;
+}
+
+// Modifiable views interfaces
+interface IFactoryManagerModifyShipmentView {
+    id: number;
+    factory_id: number;
+    branch_id: number;
+    shipment_status: "preparing_to_ship" | "in_transit" | "shipped" | "delivered";
+    shipped_at: Date | null;
+    arrived_at: Date | null;
+}
+
+interface IFactoryManagerModifyManufacturedProductView {
+    id: number;
+    factory_id: number;
+    product_id: number;
+    quantity: number;
+    manufactured_at: Date;
+}
+
+interface IFactoryManagerModifyEmployeeView {
+    id: number;
+    name: string;
+    phone_number: string;
+    age: number;
+    salary: number;
+    employment_type: "full_time" | "part_time";
+    work_schedule_id: number;
+}

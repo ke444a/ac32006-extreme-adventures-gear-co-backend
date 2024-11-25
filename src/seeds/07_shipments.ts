@@ -48,8 +48,8 @@ export async function seed(knex: Knex): Promise<void> {
         for (let i = 0; i < numberOfShipments; i++) {
             // Select a random branch
             const branch = faker.helpers.arrayElement(branches);
-            // 70% chance of shipment being delivered
-            const isDelivered = faker.number.int({ min: 1, max: 10 }) <= 7;
+            // 40% chance of shipment being delivered
+            const isDelivered = faker.number.int({ min: 1, max: 10 }) <= 4;
             let shipmentStatus;
             let arrivedAt = null;
             let shippedAt = null;

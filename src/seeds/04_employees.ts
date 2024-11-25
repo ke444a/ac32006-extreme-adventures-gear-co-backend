@@ -20,7 +20,7 @@ export async function seed(knex: Knex): Promise<void> {
         .orderBy("id");
     const hqLocation = locations.find(l => l.location_type === "hq");
     const factoryLocations = locations.filter(l => l.location_type === "factory").map(l => l.id);
-    const nonFactoryLocations = locations.filter(l => l.location_type !== "factory").map(l => l.id);
+    const branchLocations = locations.filter(l => l.location_type === "branch").map(l => l.id);
     
     // Get roles
     const roles = await knex("employee_role")
@@ -63,12 +63,12 @@ export async function seed(knex: Knex): Promise<void> {
         // Inventory managers: 8-12 employees for entire company
         ...Array(faker.number.int({ min: 8, max: 12 }))
             .fill(null)
-            .map(() => generateEmployee(roleIds["inventory_manager"], nonFactoryLocations)),
+            .map(() => generateEmployee(roleIds["inventory_manager"], branchLocations)),
         
         // Sales representatives: 20-30 employees for entire company
         ...Array(faker.number.int({ min: 20, max: 30 }))
             .fill(null)
-            .map(() => generateEmployee(roleIds["sales_representative"], nonFactoryLocations)),
+            .map(() => generateEmployee(roleIds["sales_representative"], branchLocations)),
         
         // Factory managers: 2 employees per factory
         ...factoryLocations.flatMap(location => 

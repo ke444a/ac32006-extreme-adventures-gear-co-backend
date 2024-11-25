@@ -8,6 +8,7 @@ export async function up(knex: Knex): Promise<void> {
             "branch_id",
             "product_id",
             "quantity",
+            "updated_at"
         ]);
         view.as(
             knex.select([
@@ -15,6 +16,7 @@ export async function up(knex: Knex): Promise<void> {
                 "bi.branch_id",
                 "bi.product_id",
                 "bi.quantity",
+                "bi.updated_at"
             ]).from("branch_item as bi")
         );
         view.checkOption();

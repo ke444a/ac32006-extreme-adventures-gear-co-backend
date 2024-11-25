@@ -5,14 +5,14 @@ import {
     getAllPurchasesByBranch, 
     getPurchasesByBranchAndEmployee 
 } from "@/controllers/purchases";
-import { verifyRole } from "@/middleware/verifyRole";
+import { verifyRoles } from "@/middleware/verifyRoles";
 import { verifyBranch } from "@/middleware/verifyBranch";
-
+import { EmployeeRole } from "@/config/enums";
 const router = Router();
 
-router.post("/new-customer", verifyRole("sales_representative"), verifyBranch(), createPurchaseWithNewCustomer);
-router.post("/", verifyRole("sales_representative"), verifyBranch(), createPurchaseWithExistingCustomer);
-router.get("/employee", verifyRole("sales_representative"), verifyBranch(), getPurchasesByBranchAndEmployee);
-router.get("/", verifyRole("sales_representative"), verifyBranch(), getAllPurchasesByBranch);
+router.post("/new-customer", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), createPurchaseWithNewCustomer);
+router.post("/", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), createPurchaseWithExistingCustomer);
+router.get("/employee", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), getPurchasesByBranchAndEmployee);
+router.get("/", verifyRoles([EmployeeRole.SALES_REP]), verifyBranch(), getAllPurchasesByBranch);
 
 export default router;

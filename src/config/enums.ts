@@ -7,7 +7,7 @@ export enum ResponseStatus {
 }
 
 export enum EmployeeRole {
-    SALES_REP = "sales_rep",
+    SALES_REP = "sales_representative",
     INVENTORY_MANAGER = "inventory_manager",
     FACTORY_MANAGER = "factory_manager",
     ADMIN = "admin"
@@ -31,4 +31,16 @@ export enum InventoryManagerViews {
     UPCOMING_SHIPMENTS_TO_BRANCH = "inventory_manager_upcoming_shipments_to_branch_view",
     SHIPMENT_DETAILS = "inventory_manager_shipment_details_view",
     UPDATE_SHIPMENT_STATUS = "inventory_manager_update_shipment_status_view"
+}
+
+export enum FactoryManagerViews {
+    ALL_SHIPMENTS = "factory_manager_all_shipments_view",
+    MANUFACTURED_PRODUCTS = "factory_manager_manufactured_products_view",
+    FACTORY_EMPLOYEES = "factory_manager_factory_employees_view",
+    MODIFY_SHIPMENT = "factory_manager_modify_shipment_view",
+    MODIFY_MANUFACTURED_PRODUCT = "factory_manager_modify_manufactured_product_view",
+    MODIFY_FACTORY_EMPLOYEE = "factory_manager_modify_factory_employee_view",
+    SHIPMENT_DETAILS = "factory_manager_shipment_details_view",
+    MODIFY_SHIPMENT_ITEM = "factory_manager_modify_shipment_item_view",
+    UPDATE_SHIPMENT_STATUS = "factory_manager_update_shipment_status_view"
 }

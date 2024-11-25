@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { getBranchItemsByBranch, createNewBranchItem, updateBranchItemQuantity, deleteBranchItem } from "@/controllers/inventory";
-import { verifyRole } from "@/middleware/verifyRole";
+import { verifyRoles } from "@/middleware/verifyRoles";
 import { verifyBranch } from "@/middleware/verifyBranch";
+import { EmployeeRole } from "@/config/enums";
 
 const inventoryRouter = Router();
 
-inventoryRouter.get("/branch", verifyRole("inventory_manager"), verifyBranch(), getBranchItemsByBranch);
-inventoryRouter.post("/", verifyRole("inventory_manager"), verifyBranch(), createNewBranchItem);
-inventoryRouter.patch("/:branchItemId", verifyRole("inventory_manager"), verifyBranch(), updateBranchItemQuantity);
-inventoryRouter.delete("/:branchItemId", verifyRole("inventory_manager"), verifyBranch(), deleteBranchItem);
+inventoryRouter.get("/branch", verifyRoles([EmployeeRole.INVENTORY_MANAGER]), verifyBranch(), getBranchItemsByBranch);
+inventoryRouter.post("/", verifyRoles([EmployeeRole.INVENTORY_MANAGER]), verifyBranch(), createNewBranchItem);
+inventoryRouter.patch("/:branchItemId", verifyRoles([EmployeeRole.INVENTORY_MANAGER]), verifyBranch(), updateBranchItemQuantity);
+inventoryRouter.delete("/:branchItemId", verifyRoles([EmployeeRole.INVENTORY_MANAGER]), verifyBranch(), deleteBranchItem);
 
 export default inventoryRouter;

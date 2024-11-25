@@ -14,7 +14,10 @@ export const createNewBranchItem = async (branchId: number, productId: number, q
 };
 
 export const updateBranchItemQuantity = async (branchItemId: number, quantity: number) => {
-    return await knex(InventoryManagerViews.MODIFY_BRANCH_ITEM).where("id", branchItemId).update({ quantity: quantity });
+    return await knex(InventoryManagerViews.MODIFY_BRANCH_ITEM).where("id", branchItemId).update({ 
+        quantity: quantity,
+        updated_at: knex.fn.now()
+    });
 };
 
 export const deleteBranchItem = async (branchItemId: number) => {

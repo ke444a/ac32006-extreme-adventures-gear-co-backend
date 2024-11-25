@@ -13,7 +13,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments("id").primary();
         table.integer("factory_id").unsigned().notNullable();
         table.integer("branch_id").unsigned().notNullable();
-        table.string("shipment_status").notNullable();
+        table.enum("shipment_status", ["preparing_to_ship", "in_transit", "shipped", "delivered"]).notNullable();
         table.timestamp("shipped_at").nullable();
         table.timestamp("arrived_at").nullable();
 
