@@ -60,9 +60,9 @@ export const getAllEmployees = async (_req: Request, res: Response) => {
 
 export const createEmployee = async (req: Request, res: Response) => {
     try {
-        const { locationId, roleId, ...employeeData } = req.body as { locationId: number, roleId: number } & RequestBodyPOST["EMPLOYEE"];
-        const REQUIRED_FIELDS = ["name", "phoneNumber", "age", "salary", "employmentType", "workScheduleId"];
-        if (!locationId || !roleId || REQUIRED_FIELDS.some(field => !(field in employeeData))) {
+        const { locationId, role, ...employeeData } = req.body as { locationId: number } & RequestBodyPOST["EMPLOYEE"];
+        const REQUIRED_FIELDS = ["name", "phoneNumber", "age", "salary", "employmentType", "workScheduleType"];
+        if (!locationId || !role || REQUIRED_FIELDS.some(field => !(field in employeeData))) {
             res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Invalid request body" });
             return;
         }

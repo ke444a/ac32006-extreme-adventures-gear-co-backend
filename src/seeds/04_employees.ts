@@ -89,12 +89,19 @@ export async function seed(knex: Knex): Promise<void> {
     const passwordHash = await bcrypt.hash("advGearPswd123", 10);
     const credentialsIngestData = insertedEmployees.map(employee => ({
         employee_id: employee.id,
-        email: employee.name.toLowerCase().replace(/\s+/g, ".") + "@adventuregear.com",
+        email: employee.name.toLowerCase().replace(/\s+/g, ".")
+            .replace(/\.+/g, ".")
+            + "@adventuregear.com",
         password_hash: passwordHash
     }));
 
     // Write credentials to file
-    fs.writeFileSync("credentials.json", JSON.stringify(credentialsIngestData, null, 2));
+    const credentialsForFile = insertedEmployees.map(employee => ({
+        id: employee.id,
+        email: employee.name.toLowerCase().replace(/\s+/g, ".") + "@adventuregear.com",
+        password: "advGearPswd123"
+    }));
+    fs.writeFileSync("credentials.json", JSON.stringify(credentialsForFile, null, 2));
 
     await knex("employee_credentials").insert(credentialsIngestData);
 

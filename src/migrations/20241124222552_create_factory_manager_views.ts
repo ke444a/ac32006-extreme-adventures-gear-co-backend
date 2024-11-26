@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
             "shipment_id",
             "branch_id",
             "factory_id",
-            "branch_name",
+            "branch_code",
             "branch_city",
             "shipment_status",
             "shipped_at",
@@ -19,7 +19,7 @@ export async function up(knex: Knex): Promise<void> {
                 "s.id as shipment_id",
                 "b.id as branch_id",
                 "f.id as factory_id",
-                "b.name as branch_name",
+                "b.branch_code as branch_code",
                 "l.city as branch_city",
                 "s.shipment_status",
                 "s.shipped_at",
@@ -34,7 +34,7 @@ export async function up(knex: Knex): Promise<void> {
                 .groupBy(
                     "s.id",
                     "b.id",
-                    "b.name",
+                    "b.branch_code",
                     "l.city",
                     "s.shipment_status",
                     "s.shipped_at",
@@ -146,7 +146,8 @@ export async function up(knex: Knex): Promise<void> {
             "factory_id",
             "product_id",
             "quantity",
-            "manufactured_at"
+            "manufactured_at",
+            "updated_at"
         ]);
         view.as(
             knex.select([
@@ -154,7 +155,8 @@ export async function up(knex: Knex): Promise<void> {
                 "factory_id",
                 "product_id",
                 "quantity",
-                "manufactured_at"
+                "manufactured_at",
+                "updated_at"
             ])
                 .from("factory_product_item")
         );

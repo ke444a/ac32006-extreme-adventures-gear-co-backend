@@ -32,6 +32,10 @@ const updatePurchaseItemsQuery = async (purchaseItems: (IPurchaseItem & { priceP
     })));
 };
 
+const getAllPurchasesByLocationQuery = async (locationId: number) => {
+    return await knex<IAdminPurchaseSummaryView>(AdminViews.PURCHASE_SUMMARY).where({ location_id: locationId });
+};
+
 const getAllPurchasesByBranchQuery = async (branchId: number) => {
     return await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId);
 };
@@ -61,5 +65,6 @@ export {
     updatePurchaseQuery,
     updatePurchaseItemsQuery,
     deletePurchaseQuery,
-    getAllPurchasesQuery
+    getAllPurchasesQuery,
+    getAllPurchasesByLocationQuery
 };

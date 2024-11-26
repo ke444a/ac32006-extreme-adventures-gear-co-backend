@@ -35,6 +35,7 @@ interface IAdminAllPayrollsView {
     payment_method: PaymentMethod;
     payment_status: PaymentStatus;
     amount: number;
+    location_id: number;
 }
 
 /**
@@ -57,11 +58,12 @@ interface IAdminAllPaymentsView {
 interface IAdminAllPurchasesView {
     purchase_id: number;
     branch_id: number;
-    branch_name: string;
+    branch_code: number;
     customer_name: string | null;
     sales_rep_id: number;
     sales_rep_name: string;
     total_amount: number;
+    payment_method: PaymentMethod;
     payment_status: PaymentStatus;
     purchase_date: Date;
 }
@@ -103,3 +105,82 @@ interface IAdminModifyPaymentView {
     amount: number;
     payment_date: Date;
 }
+
+/**
+ * View for all locations
+ */
+interface IAdminAllLocationsView {
+    id: number;
+    location_type: "branch" | "factory" | "hq";
+    city: string;
+    address: string;
+    branch_code: number | null;
+    factory_code: number | null;
+}
+
+/**
+ * View for location details
+ */
+interface IAdminLocationDetailsView {
+    branch_id: number | null;
+    factory_id: number | null;
+    location_id: number;
+    location_type: "branch" | "factory" | "hq";
+    city: string;
+    address: string;
+    branch_code: number | null;
+    factory_code: number | null;
+    sales_target: number | null;
+    production_target: number | null;
+}
+
+/**
+ * View for purchase summary
+ */
+interface IAdminPurchaseSummaryView extends ISalesRepPurchaseSummaryView {
+    location_id: number;
+    location_type: "branch" | "factory" | "hq";
+}
+
+/**
+ * View for updating branch sales target
+ */
+interface IAdminModifyBranchView {
+    id: number;
+    sales_target: number;
+}
+
+/**
+ * View for updating factory production target
+ */
+interface IAdminModifyFactoryView {
+    id: number;
+    production_target: number;
+}
+
+/**
+ * View for all products
+ */
+interface IAdminAllProductsView {
+    id: number;
+    name: string;
+    description: string;
+    image_url: string | null;
+    price: number;
+    warranty_duration: number;
+    product_category_id: number;
+    product_category_name: string;
+}
+
+/**
+ * View for modifying products
+ */
+interface IAdminModifyProductView {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    warranty_duration: number;
+    product_category_id: number;
+}
+

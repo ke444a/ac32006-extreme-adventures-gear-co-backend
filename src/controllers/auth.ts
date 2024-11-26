@@ -1,6 +1,7 @@
 import { ResponseStatus } from "@/config/enums";
 import { Request, Response } from "express";
 import AuthService from "@/services/auth";
+import { convertSnakeCaseToCamel } from "@/utils/convertSnakeCaseToCamel";
 
 const TOKEN_EXPIRY_TIME = 1000 * 60 * 60 * 24;
 
@@ -11,9 +12,9 @@ export const loginUser = async (req: Request, res: Response) => {
             res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Email and password are required" });
             return;
         }
-        const token = await AuthService.handleLogin(email, password);
+        const { token, employee } = await AuthService.handleLogin(email, password);
         res.cookie("token", token, { httpOnly: true, secure: true, maxAge: TOKEN_EXPIRY_TIME, sameSite: "none" });
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Login successful", data: null });
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { user: convertSnakeCaseToCamel(employee) } });
     } catch (error) {
         console.log(error);
         res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Unable to login" });

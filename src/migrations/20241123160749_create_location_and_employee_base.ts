@@ -13,6 +13,8 @@ export async function up(knex: Knex): Promise<void> {
         table.increments("id").primary();
         table.string("city").nullable();
         table.string("address").notNullable();
+        table.float("latitude").nullable();
+        table.float("longitude").nullable();
         table.enum("location_type", ["branch", "hq", "factory"]).notNullable();
     });
 

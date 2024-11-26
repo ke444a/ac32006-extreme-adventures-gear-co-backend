@@ -13,6 +13,13 @@ export enum EmployeeRole {
     ADMIN = "admin"
 }
 
+export enum PaymentStatus {
+    COMPLETED = "completed",
+    PENDING = "pending",
+    FAILED = "failed",
+    REFUNDED = "refunded"
+}
+
 export enum SalesRepresentativeViews {
     ALL_CUSTOMERS = "sales_represenative_all_customers_view",
     CUSTOMERS_IN_BRANCH = "sales_represenative_branch_customers_view",
@@ -48,11 +55,22 @@ export enum FactoryManagerViews {
 }
 
 export enum AdminViews {
+    ALL_LOCATIONS = "admin_all_locations_view",
     ALL_EMPLOYEES = "admin_all_employees_view",
     ALL_PAYROLLS = "admin_all_payrolls_view",
     ALL_PAYMENTS = "admin_all_payments_view",
     ALL_PURCHASES = "admin_all_purchases_view",
     MODIFY_EMPLOYEE = "admin_modify_employee_view",
     MODIFY_PAYROLL = "admin_modify_payroll_view",
-    MODIFY_PAYMENT = "admin_modify_payment_view"
+    MODIFY_PAYMENT = "admin_modify_payment_view",
+    PURCHASE_SUMMARY = "admin_purchase_summary_view",
+    LOCATION_DETAILS = "admin_location_details_view",
+    MODIFY_BRANCH = "admin_modify_branch_view",
+    MODIFY_FACTORY = "admin_modify_factory_view",
+    ALL_PRODUCTS = "admin_all_products_view",
+    MODIFY_PRODUCT = "admin_modify_product_view"
+}
+
+export enum GlobalViews {
+    PRODUCT_CATEGORIES = "global_product_categories_view"
 }

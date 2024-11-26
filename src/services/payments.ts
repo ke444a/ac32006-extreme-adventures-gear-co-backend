@@ -14,7 +14,7 @@ class PaymentsService {
     }
 
     public async createPayroll(employeeId: number, paymentData: RequestBodyPOST["PAYMENT"]) {
-        const paymentId = await createPaymentForPayrollQuery("customer", paymentData.paymentMethod, paymentData.paymentStatus, paymentData.amount);
+        const paymentId = await createPaymentForPayrollQuery("payroll", paymentData.paymentMethod, paymentData.paymentStatus, paymentData.amount);
         return await createPayrollQuery(employeeId, paymentId);
     }
 

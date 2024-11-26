@@ -1,5 +1,6 @@
 import { TOKEN_SECRET } from "@/config/env";
 import { getCredentialsByEmailQuery } from "@/queries/auth";
+import { getEmployeeByIdQuery } from "@/queries/employees";
 import { generateJwtToken } from "@/utils/generateJwtToken";
 import bcrypt from "bcryptjs";
 
@@ -17,7 +18,8 @@ class AuthService {
         }
 
         const token = generateJwtToken(employeeId.toString(), TOKEN_SECRET as string, "1d");
-        return token;
+        const employee = await getEmployeeByIdQuery(employeeId);
+        return { token, employee };
     }
 }
 

@@ -11,8 +11,9 @@ const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
+const GEOCODING_API_URL = process.env.GEOCODING_API_URL;
 
-if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_NAME || !TOKEN_SECRET) {
+if (!TOKEN_SECRET || !GEOCODING_API_URL) {
     console.error("Missing environment variables");
     process.exit(1);
 }
@@ -25,4 +26,5 @@ export {
     DB_PASSWORD,
     DB_NAME,
     TOKEN_SECRET,
+    GEOCODING_API_URL
 };

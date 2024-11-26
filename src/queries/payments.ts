@@ -12,7 +12,7 @@ const createPaymentForPurchaseQuery = async (paymentType: PaymentTypeDB, payment
 };
 
 const createPaymentForPayrollQuery = async (paymentType: PaymentTypeDB, paymentMethod: PaymentMethodDB, paymentStatus: PaymentStatusDB, amount: number) => {
-    const [paymentId] = await knex<IAdminModifyPaymentView>(SalesRepresentativeViews.MODIFY_PAYMENT).insert({
+    const [paymentId] = await knex<IAdminModifyPaymentView>(AdminViews.MODIFY_PAYMENT).insert({
         payment_type: paymentType,
         payment_method: paymentMethod,
         payment_status: paymentStatus,
@@ -29,6 +29,11 @@ const updatePaymentForPurchaseQuery = async (paymentId: number, paymentStatus: P
 
 const getAllPayrollsQuery = async () => {
     return await knex<IAdminAllPayrollsView>(AdminViews.ALL_PAYROLLS);
+};
+
+const getAllPayrollsByLocationQuery = async (locationId: number) => {
+    return await knex<IAdminAllPayrollsView>(AdminViews.ALL_PAYROLLS)
+        .where({ location_id: locationId });
 };
 
 const createPayrollQuery = async (employeeId: number, paymentId: number) => {
@@ -71,5 +76,6 @@ export {
     deletePayrollQuery,
     getAllPaymentsQuery,
     createPaymentForPayrollQuery,
-    getPaymentIdByPayrollQuery
+    getPaymentIdByPayrollQuery,
+    getAllPayrollsByLocationQuery
 };

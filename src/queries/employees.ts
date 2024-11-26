@@ -5,9 +5,13 @@ const getEmployeeByIdQuery = async (id: number) => {
     const employee = await knex("employee")
         .select([
             "employee.*",
-            "employee_role.name as role"
+            "employee_role.name as role",
+            "location.location_type as location_type",
+            "location.city as location_city",
+            "location.address as location_address"
         ])
         .join("employee_role", "employee.role_id", "employee_role.id")
+        .join("location", "employee.location_id", "location.id")
         .where("employee.id", id)
         .first();
 
@@ -75,6 +79,22 @@ const deleteEmployeeQuery = async (employeeId: number) => {
         .delete();
 };
 
+const getWorkScheduleIdQuery = async (workScheduleType: WorkScheduleTypeDB) => {
+    const { id } = await knex("work_schedule")
+        .where("shift_type", workScheduleType)
+        .select("id")
+        .first();
+    return id;
+};
+
+const getRoleIdQuery = async (roleName: IEmployeeRole) => {
+    const { id } = await knex("employee_role")
+        .where("name", roleName)
+        .select("id")
+        .first();
+    return id;
+};
+
 export {
     getEmployeeByIdQuery,
     getEmployeesByLocationIdQuery,
@@ -84,5 +104,7 @@ export {
     getAllEmployeesQuery,
     createEmployeeQuery,
     updateEmployeeQuery,
-    deleteEmployeeQuery
+    deleteEmployeeQuery,
+    getWorkScheduleIdQuery,
+    getRoleIdQuery
 };

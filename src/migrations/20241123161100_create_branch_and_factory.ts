@@ -10,6 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     // Create factory table
     await knex.schema.createTable("factory", (table) => {
         table.increments("id").primary();
+        table.integer("factory_code").notNullable();
         table.integer("location_id").unsigned().notNullable();
         table.float("production_target").notNullable();
 
@@ -19,7 +20,7 @@ export async function up(knex: Knex): Promise<void> {
     // Create branch table
     await knex.schema.createTable("branch", (table) => {
         table.increments("id").primary();
-        table.string("name").notNullable();
+        table.integer("branch_code").notNullable();
         table.float("sales_target").notNullable();
         table.integer("location_id").unsigned().notNullable();
         

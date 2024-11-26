@@ -10,7 +10,7 @@ interface IFactoryManagerAllShipmentsView {
     shipment_id: number;
     branch_id: number;
     factory_id: number;
-    branch_name: string;
+    branch_code: number;
     branch_city: string;
     shipment_status: ShipmentStatusDB;
     shipped_at: Date;
@@ -71,6 +71,7 @@ interface IFactoryManagerModifyManufacturedProductView {
     product_id: number;
     quantity: number;
     manufactured_at: Date;
+    updated_at: Date;
 }
 
 /**

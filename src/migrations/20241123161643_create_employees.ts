@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string("phone_number", 15).notNullable();
         table.integer("age").notNullable();
         table.float("salary").notNullable();
-        table.date("hire_date").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("hire_date").notNullable().defaultTo(knex.fn.now());
         table.string("employment_type").notNullable();
         table.integer("work_schedule_id").unsigned().notNullable();
         table.integer("location_id").unsigned().notNullable();

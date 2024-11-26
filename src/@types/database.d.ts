@@ -16,9 +16,11 @@ interface IEmployeeRoleDB {
     name: string;
 }
 
+type WorkScheduleTypeDB = "morning" | "afternoon";
+
 interface IWorkScheduleDB {
     id: number;
-    shift_type: string;
+    shift_type: WorkScheduleTypeDB;
     start_time: Date;
     end_time: Date;
 }
@@ -103,7 +105,7 @@ interface ICustomerDB {
     joined_at: Date;
 }
 
-type PaymentTypeDB = "customer" | "employee";
+type PaymentTypeDB = "customer" | "payroll";
 type PaymentMethodDB = "cash" | "card" | "bank_transfer" | "cheque";
 type PaymentStatusDB = "pending" | "completed" | "failed" | "refunded";
 

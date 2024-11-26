@@ -18,14 +18,21 @@ interface RequestBodyPATCH {
         phoneNumber?: string;
         age?: number;
         salary?: number;
-        employmentType?: EmploymentType;
-        workScheduleId?: number;
+        employmentType?: EmploymentTypeDB;
+        workScheduleType?: WorkScheduleTypeDB;
     },
     PAYMENT: {
         paymentType?: PaymentTypeDB;
         paymentMethod?: PaymentMethodDB;
         paymentStatus?: PaymentStatusDB;
         amount?: number;
+    },
+    PRODUCT: {
+        name: string;
+        description: string;
+        price: number;
+        warrantyDuration: number;
+        categoryId: number;
     }
 }
 
@@ -58,8 +65,8 @@ interface RequestBodyPOST {
         age: number;
         salary: number;
         employmentType: EmploymentType;
-        workScheduleId: number;
-        roleId: number;
+        workScheduleType: WorkScheduleTypeDB;
+        role: IEmployeeRole;
         locationId: number;
     },
     PAYMENT: {
@@ -79,4 +86,3 @@ interface IShipmentItem {
     factoryProductId: number;
     quantity: number;
 }
-
