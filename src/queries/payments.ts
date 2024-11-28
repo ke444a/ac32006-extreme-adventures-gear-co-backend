@@ -23,7 +23,7 @@ const createPaymentForPayrollQuery = async (paymentType: PaymentTypeDB, paymentM
 
 const updatePaymentForPurchaseQuery = async (paymentId: number, paymentStatus: PaymentStatusDB) => {
     await knex<ISalesRepModifyPaymentView>(SalesRepresentativeViews.MODIFY_PAYMENT)
-        .where("id", paymentId)
+        .where({ id: paymentId })
         .update({ payment_status: paymentStatus });
 };
 
@@ -46,6 +46,14 @@ const createPayrollQuery = async (employeeId: number, paymentId: number) => {
 const getPaymentIdByPayrollQuery = async (payrollId: number): Promise<number> => {
     const [{ payment_id }] = await knex<IAdminModifyPayrollView>(AdminViews.MODIFY_PAYROLL)
         .where("id", payrollId)
+        .select("payment_id");
+
+    return payment_id;
+};
+
+const getPaymentIdByPurchaseQuery = async (purchaseId: number): Promise<number> => {
+    const [{ payment_id }] = await knex("purchase")
+        .where("id", purchaseId)
         .select("payment_id");
 
     return payment_id;
@@ -77,5 +85,6 @@ export {
     getAllPaymentsQuery,
     createPaymentForPayrollQuery,
     getPaymentIdByPayrollQuery,
-    getAllPayrollsByLocationQuery
+    getAllPayrollsByLocationQuery,
+    getPaymentIdByPurchaseQuery
 };

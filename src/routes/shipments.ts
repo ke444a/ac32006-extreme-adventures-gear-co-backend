@@ -5,7 +5,8 @@ import {
     updateShipmentStatusForBranch,
     updateShipmentStatusForFactory,
     createShipment, 
-    getAllShipmentsByFactory 
+    getAllShipmentsByFactory,
+    deleteShipment
 } from "@/controllers/shipments";
 import { verifyRoles } from "@/middleware/verifyRoles";
 import { verifyBranch } from "@/middleware/verifyBranch";
@@ -20,5 +21,6 @@ shipmentsRouter.get("/", verifyRoles([EmployeeRole.FACTORY_MANAGER]), verifyFact
 shipmentsRouter.patch("/branch/:shipmentId", verifyRoles([EmployeeRole.INVENTORY_MANAGER]), verifyBranch(), updateShipmentStatusForBranch);
 shipmentsRouter.patch("/factory/:shipmentId", verifyRoles([EmployeeRole.FACTORY_MANAGER]), verifyFactory(), updateShipmentStatusForFactory);
 shipmentsRouter.post("/", verifyRoles([EmployeeRole.FACTORY_MANAGER]), verifyFactory(), createShipment);
+shipmentsRouter.delete("/:shipmentId", verifyRoles([EmployeeRole.FACTORY_MANAGER]), verifyFactory(), deleteShipment);
 
 export default shipmentsRouter;

@@ -28,7 +28,7 @@ export async function up(knex: Knex): Promise<void> {
         table.integer("quantity_shipped").notNullable();
 
         table.foreign("shipment_id").references("shipment.id").onDelete("cascade").onUpdate("cascade");
-        table.foreign("factory_product_id").references("factory_product_item.id");
+        table.foreign("factory_product_id").references("factory_product_item.id").onDelete("set null").onUpdate("cascade");
     });
 }
 

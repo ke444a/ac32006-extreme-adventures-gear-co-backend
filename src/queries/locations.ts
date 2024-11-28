@@ -1,5 +1,5 @@
 import knex from "@/config/db";
-import { AdminViews } from "@/config/enums";
+import { AdminAnalyticsViews, AdminViews } from "@/config/enums";
 
 const getAllLocationsQuery = () => knex<IAdminAllLocationsView>(AdminViews.ALL_LOCATIONS);
 
@@ -21,9 +21,24 @@ const updateFactoryDetailsQuery = (factoryId: number, productionTarget: number) 
         .update({ production_target: productionTarget });
 };  
 
+const getCategorySalesAnalyticsQuery = async () => {
+    return await knex<IAdminCategorySalesView>(AdminAnalyticsViews.CATEGORY_SALES);
+};
+
+const getFactoryShippingAnalyticsQuery = async () => {
+    return await knex<IAdminFactoryShippingView>(AdminAnalyticsViews.FACTORY_SHIPPING);
+};
+
+const getYearlySummaryAnalyticsQuery = async () => {
+    return await knex<IAdminYearlySummaryView>(AdminAnalyticsViews.YEARLY_SUMMARY);
+};
+
 export {
     getAllLocationsQuery,
     getLocationByIdQuery,
     updateBranchDetailsQuery,
-    updateFactoryDetailsQuery
+    updateFactoryDetailsQuery,
+    getCategorySalesAnalyticsQuery,
+    getFactoryShippingAnalyticsQuery,
+    getYearlySummaryAnalyticsQuery
 };

@@ -75,8 +75,8 @@ export const updatePurchase = async (req: Request, res: Response) => {
 
 export const deletePurchase = async (req: Request, res: Response) => {
     try {
-        const { purchaseId } = req.params as { purchaseId: string };
-        await PurchasesService.deletePurchase(parseInt(purchaseId));
+        const purchaseId = parseInt(req.params.purchaseId);
+        await PurchasesService.deletePurchase(purchaseId);
         res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Purchase deleted successfully" });
     } catch (error) {
         console.log(error);
@@ -93,4 +93,21 @@ export const getAllPurchases = async (_req: Request, res: Response) => {
         res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
     }
 }; 
+
+export const updatePurchaseStatus = async (req: Request, res: Response) => {
+    try {
+        const purchaseId = parseInt(req.params.purchaseId);
+        const { paymentStatus } = req.body as { paymentStatus: PaymentStatusDB };
+        if (!paymentStatus) {
+            res.status(400).json(<APIResponse>{ status: ResponseStatus.INVALID_REQUEST_BODY, message: "Missing required fields" });
+            return;
+        }
+
+        await PurchasesService.updatePurchaseStatus(purchaseId, paymentStatus);
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Purchase payment status updated successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(<APIResponse>{ status: "error", message: "Internal server error" });
+    }
+};
 

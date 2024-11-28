@@ -1,5 +1,6 @@
 import { 
     createPaymentForPurchaseQuery, 
+    getPaymentIdByPurchaseQuery, 
     updatePaymentForPurchaseQuery 
 } from "@/queries/payments";
 import { getProductsByIdsQuery } from "@/queries/products";
@@ -28,7 +29,7 @@ class PurchasesService {
     ) {
         const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
-            const product = storedProducts.find(product => product.id === item.productId);
+            const product = storedProducts.find(product => Number(product.id) === Number(item.productId));
             if (!product) {
                 throw new Error(`Product with id ${item.productId} not found`);
             }
@@ -50,7 +51,7 @@ class PurchasesService {
     ) {
         const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
-            const product = storedProducts.find(product => product.id === item.productId);
+            const product = storedProducts.find(product => Number(product.id) === Number(item.productId));
             if (!product) {
                 throw new Error(`Product with id ${item.productId} not found`);
             }
@@ -65,18 +66,18 @@ class PurchasesService {
 
     public async getAllPurchasesByBranch(branchId: number) {
         const purchases = await getAllPurchasesByBranchQuery(branchId);
-        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.id));
+        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.purchase_id));
         const purchasesWithItems = purchases.map(purchase => {
-            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.id) };
+            return { ...purchase, items: purchaseItems.filter(item => Number(item.purchase_id) === Number(purchase.purchase_id)) };
         });
         return purchasesWithItems;
     }
 
     public async getPurchasesByBranchAndEmployee(branchId: number, employeeId: number) {
         const purchases = await getPurchasesByBranchAndEmployeeQuery(branchId, employeeId);
-        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.id));
+        const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.purchase_id));
         const purchasesWithItems = purchases.map(purchase => {
-            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.id) };
+            return { ...purchase, items: purchaseItems.filter(item => Number(item.purchase_id) === Number(purchase.purchase_id)) };
         });
         return purchasesWithItems;
     }
@@ -85,7 +86,7 @@ class PurchasesService {
         const purchases = await getAllPurchasesQuery();
         const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.purchase_id));
         const purchasesWithItems = purchases.map(purchase => {
-            return { ...purchase, items: purchaseItems.filter(item => item.purchase_id === purchase.purchase_id) };
+            return { ...purchase, items: purchaseItems.filter(item => Number(item.purchase_id) === Number(purchase.purchase_id)) };
         });
         return purchasesWithItems;
     }
@@ -93,7 +94,7 @@ class PurchasesService {
     public async updatePurchase(purchaseId: number, purchaseItems: IPurchaseItem[], paymentStatus: PaymentStatusDB) {
         const storedProducts = await getProductsByIdsQuery(purchaseItems.map(item => item.productId));
         const purchaseItemWithPrice = purchaseItems.map(item => {
-            const product = storedProducts.find(product => product.id === item.productId);
+            const product = storedProducts.find(product => Number(product.id) === Number(item.productId));
             if (!product) {
                 throw new Error(`Product with id ${item.productId} not found`);
             }
@@ -110,6 +111,11 @@ class PurchasesService {
 
     public async deletePurchase(purchaseId: number) {
         await deletePurchaseQuery(purchaseId);
+    }
+
+    public async updatePurchaseStatus(purchaseId: number, paymentStatus: PaymentStatusDB) {
+        const paymentId = await getPaymentIdByPurchaseQuery(purchaseId);
+        await updatePaymentForPurchaseQuery(paymentId, paymentStatus);
     }
 }
 

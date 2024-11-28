@@ -16,12 +16,11 @@ const getAllFactoryProductItemsQuery = async (factoryId: number) => {
         .where("factory_id", factoryId);
 };
 
-const updateFactoryProductItemQuery = async (factoryProductId: number, factoryProductQuantity: number, manufacturedAt: Date) => {
+const updateFactoryProductItemQuery = async (factoryProductId: number, factoryProductQuantity: number) => {
     return await knex<IFactoryManagerModifyManufacturedProductView>(FactoryManagerViews.MODIFY_MANUFACTURED_PRODUCT)
         .where("id", factoryProductId)
         .update({
             quantity: factoryProductQuantity,
-            manufactured_at: manufacturedAt,
             updated_at: knex.fn.now()
         });
 };

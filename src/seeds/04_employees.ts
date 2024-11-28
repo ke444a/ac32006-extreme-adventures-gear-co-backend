@@ -38,13 +38,13 @@ export async function seed(knex: Knex): Promise<void> {
     const afternoonShiftId = workSchedules.find(s => s.shift_type === "afternoon")?.id;
 
     // Helper function to generate employee data
-    const generateEmployee = (roleId: number, locationIds: number[]) => ({
+    const generateEmployee = (roleId: number, locationId: number) => ({
         name: faker.person.fullName(),
         phone_number: faker.phone.number({ style: "national" }),
         salary: faker.number.int({ min: 25000, max: 55000 }),
         hire_date: faker.date.between({
-            from: "2020-01-01",
-            to: "2024-10-29"
+            from: "2018-01-01",
+            to: "2024-11-01"
         }).toISOString().split("T")[0],
         age: faker.number.int({ min: 20, max: 65 }),
         employment_type: (roleId === roleIds["sales_representative"] || roleId === roleIds["factory_worker"])
@@ -52,33 +52,31 @@ export async function seed(knex: Knex): Promise<void> {
             : "full_time",
         work_schedule_id: roleId === roleIds["factory_worker"] ? faker.helpers.arrayElement([morningShiftId, afternoonShiftId]) : morningShiftId,
         role_id: roleId,
-        location_id: faker.helpers.arrayElement(locationIds)
+        location_id: locationId
     });
 
     // Generate employees
     const employeesIngestData = [
         // Admin: 1 employee
-        generateEmployee(roleIds["admin"], [hqLocation.id]),
+        generateEmployee(roleIds["admin"], hqLocation.id),
 
-        // Inventory managers: 8-12 employees for entire company
-        ...Array(faker.number.int({ min: 8, max: 12 }))
-            .fill(null)
-            .map(() => generateEmployee(roleIds["inventory_manager"], branchLocations)),
+        // Inventory managers: 1 per branch
+        ...branchLocations.map(location => generateEmployee(roleIds["inventory_manager"], location)),
         
-        // Sales representatives: 20-30 employees for entire company
-        ...Array(faker.number.int({ min: 20, max: 30 }))
-            .fill(null)
-            .map(() => generateEmployee(roleIds["sales_representative"], branchLocations)),
+        // Sales representatives: 3-4 per branch
+        ...branchLocations.flatMap(location => 
+            Array(faker.number.int({ min: 3, max: 4 })).fill(null).map(() => generateEmployee(roleIds["sales_representative"], location))
+        ),
         
         // Factory managers: 2 employees per factory
         ...factoryLocations.flatMap(location => 
-            Array(2).fill(null).map(() => generateEmployee(roleIds["factory_manager"], [location]))
+            Array(2).fill(null).map(() => generateEmployee(roleIds["factory_manager"], location))
         ),
 
-        // Factory workers: 20-30 employees for entire company
-        ...Array(faker.number.int({ min: 20, max: 30 }))
-            .fill(null)
-            .map(() => generateEmployee(roleIds["factory_worker"], factoryLocations))
+        // Factory workers: 30 per factory
+        ...factoryLocations.flatMap(location => 
+            Array(30).fill(null).map(() => generateEmployee(roleIds["factory_worker"], location))
+        )
     ];
 
     await knex("employee").insert(employeesIngestData);
@@ -87,7 +85,9 @@ export async function seed(knex: Knex): Promise<void> {
     // Generate employee credentials for website login
     // Giving same password to all employees
     const passwordHash = await bcrypt.hash("advGearPswd123", 10);
-    const credentialsIngestData = insertedEmployees.map(employee => ({
+    // filter out factory workers
+    const employeesWithoutFactoryWorkers = insertedEmployees.filter(employee => employee.role_id !== roleIds["factory_worker"]);
+    const credentialsIngestData = employeesWithoutFactoryWorkers.map(employee => ({
         employee_id: employee.id,
         email: employee.name.toLowerCase().replace(/\s+/g, ".")
             .replace(/\.+/g, ".")
@@ -96,10 +96,11 @@ export async function seed(knex: Knex): Promise<void> {
     }));
 
     // Write credentials to file
-    const credentialsForFile = insertedEmployees.map(employee => ({
+    const credentialsForFile = employeesWithoutFactoryWorkers.map(employee => ({
         id: employee.id,
         email: employee.name.toLowerCase().replace(/\s+/g, ".") + "@adventuregear.com",
-        password: "advGearPswd123"
+        password: "advGearPswd123",
+        location_id: employee.location_id
     }));
     fs.writeFileSync("credentials.json", JSON.stringify(credentialsForFile, null, 2));
 

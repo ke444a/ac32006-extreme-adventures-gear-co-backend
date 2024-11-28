@@ -32,7 +32,7 @@ const updateCustomerQuery = async (customerId: number, customer: RequestBodyPATC
 
 const deleteCustomerQuery = async (customerId: number) => {
     await knex<ISalesRepModifyCustomerView>(SalesRepresentativeViews.MODIFY_CUSTOMER)
-        .where("id", customerId)
+        .where({ id: customerId })
         .delete();
 };
 

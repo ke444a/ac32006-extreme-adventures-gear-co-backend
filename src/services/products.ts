@@ -1,4 +1,11 @@
-import { getAllProductsQuery, getProductCategoriesQuery, updateProductQuery, deleteProductQuery } from "@/queries/products";
+import { 
+    getAllProductsQuery, 
+    getProductCategoriesQuery, 
+    updateProductQuery, 
+    deleteProductQuery, 
+    getProductsByBranchQuery, 
+    updateProductPriceQuery
+} from "@/queries/products";
 
 class ProductsService {
     public async getAllProducts() {
@@ -20,13 +27,16 @@ class ProductsService {
         return await updateProductQuery(productId, updatedProduct);
     }
 
-    public async updateProductPrice(_productId: number, _price: number) {
-        return null;
-        // return await updateProductPriceQuery(productId, price);
+    public async updateProductPrice(productId: number, price: number) {
+        return await updateProductPriceQuery(productId, price);
     }
 
     public async deleteProduct(productId: number) {
         return await deleteProductQuery(productId);
+    }
+
+    public async getProductsByBranch(branchId: number) {
+        return await getProductsByBranchQuery(branchId);
     }
 }
 

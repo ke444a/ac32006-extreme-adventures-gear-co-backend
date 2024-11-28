@@ -82,3 +82,14 @@ export const createShipment = async (req: Request, res: Response) => {
         res.status(500).json(<APIResponse>{ message: "Internal server error", status: ResponseStatus.INTERNAL_SERVER_ERROR });
     }
 };
+
+export const deleteShipment = async (req: Request, res: Response) => {
+    try {
+        const shipmentId = parseInt(req.params.shipmentId);
+        await ShipmentsService.deleteShipment(shipmentId);
+        res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(<APIResponse>{ message: "Internal server error", status: ResponseStatus.INTERNAL_SERVER_ERROR });
+    }
+};

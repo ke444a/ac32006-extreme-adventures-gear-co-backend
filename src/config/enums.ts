@@ -45,10 +45,10 @@ export enum InventoryManagerViews {
 export enum FactoryManagerViews {
     ALL_SHIPMENTS = "factory_manager_all_shipments_view",
     MANUFACTURED_PRODUCTS = "factory_manager_manufactured_products_view",
-    FACTORY_EMPLOYEES = "factory_manager_factory_employees_view",
+    FACTORY_EMPLOYEES = "factory_manager_employees_view",
     MODIFY_SHIPMENT = "factory_manager_modify_shipment_view",
     MODIFY_MANUFACTURED_PRODUCT = "factory_manager_modify_manufactured_product_view",
-    MODIFY_FACTORY_EMPLOYEE = "factory_manager_modify_factory_employee_view",
+    MODIFY_FACTORY_EMPLOYEE = "factory_manager_modify_employee_view",
     SHIPMENT_DETAILS = "factory_manager_shipment_details_view",
     MODIFY_SHIPMENT_ITEM = "factory_manager_modify_shipment_item_view",
     UPDATE_SHIPMENT_STATUS = "factory_manager_update_shipment_status_view"
@@ -67,10 +67,18 @@ export enum AdminViews {
     LOCATION_DETAILS = "admin_location_details_view",
     MODIFY_BRANCH = "admin_modify_branch_view",
     MODIFY_FACTORY = "admin_modify_factory_view",
-    ALL_PRODUCTS = "admin_all_products_view",
+    // ALL_PRODUCTS = "admin_all_products_view",
     MODIFY_PRODUCT = "admin_modify_product_view"
 }
 
+export enum AdminAnalyticsViews {
+    CATEGORY_SALES = "admin_category_sales_view",
+    YEARLY_SUMMARY = "admin_yearly_summary_view",
+    FACTORY_SHIPPING = "admin_factory_shipping_view"
+}
+
 export enum GlobalViews {
-    PRODUCT_CATEGORIES = "global_product_categories_view"
+    PRODUCT_CATEGORIES = "global_product_categories_view",
+    ALL_PRODUCTS = "global_all_products_view",
+    AUTHENTICATED_EMPLOYEE_DETAILS = "authenticated_employee_details_view"
 }

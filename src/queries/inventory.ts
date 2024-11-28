@@ -18,7 +18,7 @@ export const updateBranchItemQuantityQuery = async (branchItemId: number, quanti
         .where("id", branchItemId)
         .update({ 
             quantity: quantity,
-            updated_at: knex.fn.now()
+            ...(quantity > 0 ? { updated_at: knex.fn.now() } : {})
         });
 };
 

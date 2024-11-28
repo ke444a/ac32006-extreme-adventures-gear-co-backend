@@ -52,6 +52,7 @@ export async function up(knex: Knex): Promise<void> {
             "product_id",
             "product_name",
             "product_image_url",
+            "product_category_id",
             "product_category",
             "quantity",
             "manufactured_at"
@@ -63,6 +64,7 @@ export async function up(knex: Knex): Promise<void> {
                 "p.id as product_id",
                 "p.name as product_name",
                 "p.image_url as product_image_url",
+                "pc.id as product_category_id",
                 "pc.name as product_category",
                 "fpi.quantity",
                 "fpi.manufactured_at"
@@ -111,7 +113,7 @@ export async function up(knex: Knex): Promise<void> {
                 .join("work_schedule as ws", "e.work_schedule_id", "ws.id")
                 .join("factory as f", "e.location_id", "f.location_id")
                 .orderBy("e.hire_date", "desc")
-                .where("e.name", "=", "factory_worker")
+                .where("er.name", "=", "factory_worker")
         );
     });
 

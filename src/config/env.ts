@@ -5,7 +5,7 @@ if (config) {
 }
 
 const ENVIRONMENT = process.env.NODE_ENV || "development";
-const PORT = process.env.PORT || 4444;
+const PORT = process.env.PORT || 8080;
 const DB_HOST = process.env.DB_HOST;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;

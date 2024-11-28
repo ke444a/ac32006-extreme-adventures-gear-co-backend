@@ -27,11 +27,12 @@ interface ISalesRepBranchCustomersView extends ISalesRepAllCustomersView {
  * View for all purchases in a specific branch
  */
 interface ISalesRepPurchaseSummaryView {
-    id: number;
+    purchase_id: number;
     customer_name: string | null;
     customer_email: string | null;
     total_price: number;
     payment_status: PaymentStatusDB;
+    payment_method: PaymentMethodDB;
     purchase_date: Date;
     branch_id: number;
     sales_rep_id: number;
@@ -49,6 +50,10 @@ interface ISalesRepPurchaseDetailsView {
     price_per_purchase_item: number;
     branch_id: number;
     sales_rep_id: number;
+    product_image_url: string | null;
+    product_price: number;
+    product_category_name: string | null;
+    product_category_id: number | null;
 }
 
 /**
@@ -77,6 +82,7 @@ interface ISalesRepModifyPaymentView {
  * View for modifying purchase details
  */
 interface ISalesRepModifyPurchaseView {
+    purchase_id: number;
     customer_id: number | null;
     branch_id: number;
     employee_id: number | null;
@@ -99,9 +105,7 @@ interface ISalesRepModifyPurchaseItemView {
  */
 interface ISalesRepModifyProductView {
     id: number;
-    name: string;
-    description: string;
-    warranty_duration: number;
+    price: number;
 }
 
 /**

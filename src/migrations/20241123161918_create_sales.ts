@@ -68,7 +68,7 @@ export async function up(knex: Knex): Promise<void> {
         table.float("total_price").notNullable();
 
         table.foreign("product_id").references("product.id").onDelete("cascade").onUpdate("cascade");
-        table.foreign("purchase_id").references("purchase.id");
+        table.foreign("purchase_id").references("purchase.id").onDelete("cascade").onUpdate("cascade");
     });
 }
 

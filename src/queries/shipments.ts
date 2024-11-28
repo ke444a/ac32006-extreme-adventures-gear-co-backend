@@ -2,11 +2,11 @@ import knex from "@/config/db";
 import { FactoryManagerViews, InventoryManagerViews } from "@/config/enums";
 
 const getAllShipmentsForBranchQuery = async (branchId: number) => {
-    return await knex<IInventoryManagerShipmentsView>(InventoryManagerViews.ALL_SHIPMENTS_TO_BRANCH).where("branch_id", branchId);
+    return await knex<IInventoryManagerAllShipmentsToBranchView>(InventoryManagerViews.ALL_SHIPMENTS_TO_BRANCH).where("branch_id", branchId);
 };
 
 const getUpcomingShipmentsForBranchQuery = async (branchId: number) => {
-    return await knex<IInventoryManagerShipmentsView>(InventoryManagerViews.UPCOMING_SHIPMENTS_TO_BRANCH).where("branch_id", branchId);
+    return await knex<IInventoryManagerUpcomingShipmentsToBranchView>(InventoryManagerViews.UPCOMING_SHIPMENTS_TO_BRANCH).where("branch_id", branchId);
 };
 
 const getShipmentItemsByShipmentIdsQuery = async (shipmentIds: number[]) => {
@@ -22,14 +22,14 @@ const createShipmentQuery = async (factoryId: number, branchId: number) => {
     return shipmentId;
 };
 
-const updateShipmentStatusForBranchQuery = async (shipmentId: number, status: ShipmentStatus) => {
+const updateShipmentStatusForBranchQuery = async (shipmentId: number, status: ShipmentStatusDB) => {
     return await knex(InventoryManagerViews.UPDATE_SHIPMENT_STATUS).where("id", shipmentId).update({
         shipment_status: status,
         arrived_at: knex.fn.now(),
     });
 };
 
-const updateShipmentStatusForFactoryQuery = async (shipmentId: number, status: ShipmentStatus, branchId: number) => {
+const updateShipmentStatusForFactoryQuery = async (shipmentId: number, status: ShipmentStatusDB, branchId: number) => {
     const shipment = await knex("shipment").where("id", shipmentId).first().select(["shipment_status", "shipped_at"]);
     if (!shipment) {
         throw new Error("Shipment not found");
@@ -50,14 +50,17 @@ const createShipmentItemsQuery = async (shipmentId: number, shipmentItems: IShip
     return await knex(FactoryManagerViews.MODIFY_SHIPMENT_ITEM).insert(shipmentItems.map(item => ({
         shipment_id: shipmentId,
         factory_product_id: item.factoryProductId,
-        quantity_shipped: item.quantityShipped
+        quantity_shipped: item.quantity
     })));
 };
 
 const getAllShipmentsForFactoryQuery = async (factoryId: number) => {
-    return await knex<IFactoryManagerShipmentsView>(FactoryManagerViews.ALL_SHIPMENTS).where("factory_id", factoryId);
+    return await knex<IFactoryManagerAllShipmentsView>(FactoryManagerViews.ALL_SHIPMENTS).where("factory_id", factoryId);
 };
 
+const deleteShipmentQuery = async (shipmentId: number) => {
+    return await knex<IFactoryManagerModifyShipmentView>(FactoryManagerViews.MODIFY_SHIPMENT).where("id", shipmentId).delete();
+};
 
 export { 
     getAllShipmentsForBranchQuery, 
@@ -67,5 +70,6 @@ export {
     updateShipmentStatusForFactoryQuery,
     createShipmentQuery,
     createShipmentItemsQuery,
-    getAllShipmentsForFactoryQuery
+    getAllShipmentsForFactoryQuery,
+    deleteShipmentQuery
 }; 

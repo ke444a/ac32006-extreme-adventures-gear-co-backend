@@ -14,8 +14,8 @@ class FactoryProductsService {
         return await getAllFactoryProductItemsQuery(factoryId);
     }
 
-    public async updateFactoryProduct(factoryProductId: number, factoryProductQuantity: number, manufacturedAt: Date) {
-        return await updateFactoryProductItemQuery(factoryProductId, factoryProductQuantity, manufacturedAt);
+    public async updateFactoryProduct(factoryProductId: number, factoryProductQuantity: number) {
+        return await updateFactoryProductItemQuery(factoryProductId, factoryProductQuantity);
     }
 
     public async deleteFactoryProduct(factoryProductId: number) {

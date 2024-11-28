@@ -161,16 +161,16 @@ interface IAdminModifyFactoryView {
 /**
  * View for all products
  */
-interface IAdminAllProductsView {
-    id: number;
-    name: string;
-    description: string;
-    image_url: string | null;
-    price: number;
-    warranty_duration: number;
-    product_category_id: number;
-    product_category_name: string;
-}
+// interface IAdminAllProductsView {
+//     id: number;
+//     name: string;
+//     description: string;
+//     image_url: string | null;
+//     price: number;
+//     warranty_duration: number;
+//     product_category_id: number;
+//     product_category_name: string;
+// }
 
 /**
  * View for modifying products
@@ -184,3 +184,41 @@ interface IAdminModifyProductView {
     product_category_id: number;
 }
 
+/**
+ * View for product sales analytics
+ */
+interface IAdminCategorySalesView {
+    category_id: number;
+    category_name: string;
+    total_purchases: number;
+    unique_products: number;
+    total_quantity_sold: number;
+    total_revenue: number;
+    year: number;
+}
+
+
+/**
+ * View for factory shipping
+ */
+interface IAdminFactoryShippingView {
+    factory_id: number;
+    factory_code: number;
+    factory_city: string;
+    total_shipments: number;
+    completed_shipments: number;
+    active_shipments: number;
+    total_items_shipped: number;
+    year: number;
+}
+
+/**
+ * View for yearly summary
+ */
+interface IAdminYearlySummaryView {
+    year: number;
+    total_revenue: number;
+    total_purchases: number;
+    unique_customers: number;
+    average_order_value: number;
+}

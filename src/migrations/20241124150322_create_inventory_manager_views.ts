@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.createView("inventory_manager_modify_branch_item_view", (view) => {
         view.columns([
             "id",
-            "branch_id",
+            "branch_id", 
             "product_id",
             "quantity",
             "updated_at"
@@ -27,13 +27,14 @@ export async function up(knex: Knex): Promise<void> {
         view.columns([
             "branch_item_id",
             "branch_id",
-            "product_id",
+            "product_id", 
             "product_name",
-            "product_category",
             "product_image_url",
+            "product_category",
             "quantity",
             "price",
-            "warranty_duration"
+            "warranty_duration",
+            "last_restocked_at"
         ]);
         view.as(
             knex.select([
@@ -45,7 +46,8 @@ export async function up(knex: Knex): Promise<void> {
                 "pc.name as product_category",
                 "bi.quantity",
                 "p.price",
-                "p.warranty_duration"
+                "p.warranty_duration",
+                "bi.updated_at as last_restocked_at"
             ])
                 .from("branch_item as bi")
                 .join("product as p", "bi.product_id", "p.id")
@@ -61,7 +63,8 @@ export async function up(knex: Knex): Promise<void> {
         view.columns([
             "shipment_id",
             "branch_id",
-            "factory_location_id",
+            "branch_city",
+            "factory_id",
             "factory_city",
             "shipment_status",
             "shipped_at",
@@ -72,8 +75,9 @@ export async function up(knex: Knex): Promise<void> {
             knex.select([
                 "s.id as shipment_id",
                 "s.branch_id",
-                "f.location_id as factory_location_id",
-                "l.city as factory_city",
+                "bl.city as branch_city",
+                "f.id as factory_id",
+                "fl.city as factory_city",
                 "s.shipment_status",
                 "s.shipped_at",
                 "s.arrived_at",
@@ -81,12 +85,15 @@ export async function up(knex: Knex): Promise<void> {
             ])
                 .from("shipment as s")
                 .join("factory as f", "s.factory_id", "f.id")
-                .join("location as l", "f.location_id", "l.id")
+                .join("location as fl", "f.location_id", "fl.id")
+                .join("branch as b", "s.branch_id", "b.id")
+                .join("location as bl", "b.location_id", "bl.id")
                 .join("shipment_item as si", "s.id", "si.shipment_id")
                 .groupBy(
                     "s.id",
                     "f.location_id",
-                    "l.city",
+                    "fl.city",
+                    "bl.city",
                     "s.shipment_status",
                     "s.shipped_at",
                     "s.arrived_at"
@@ -100,7 +107,8 @@ export async function up(knex: Knex): Promise<void> {
         view.columns([
             "shipment_id",
             "branch_id",
-            "factory_location_id",
+            "branch_city",
+            "factory_id",
             "factory_city",
             "shipment_status",
             "shipped_at",
@@ -111,8 +119,9 @@ export async function up(knex: Knex): Promise<void> {
             knex.select([
                 "s.id as shipment_id",
                 "s.branch_id",
-                "f.location_id as factory_location_id",
-                "l.city as factory_city",
+                "bl.city as branch_city",
+                "s.factory_id",
+                "fl.city as factory_city",
                 "s.shipment_status",
                 "s.shipped_at",
                 "s.arrived_at",
@@ -120,7 +129,9 @@ export async function up(knex: Knex): Promise<void> {
             ])
                 .from("shipment as s")
                 .join("factory as f", "s.factory_id", "f.id")
-                .join("location as l", "f.location_id", "l.id")
+                .join("branch as b", "s.branch_id", "b.id")
+                .join("location as fl", "f.location_id", "fl.id")
+                .join("location as bl", "b.location_id", "bl.id")
                 .join("shipment_item as si", "s.id", "si.shipment_id")
                 .where("s.arrived_at", null)
                 .whereNotNull("s.shipped_at")
@@ -128,7 +139,8 @@ export async function up(knex: Knex): Promise<void> {
                 .groupBy(
                     "s.id",
                     "f.location_id",
-                    "l.city",
+                    "fl.city",
+                    "bl.city",
                     "s.shipment_status",
                     "s.shipped_at",
                     "s.arrived_at"
@@ -182,6 +194,7 @@ export async function up(knex: Knex): Promise<void> {
                 "arrived_at"
             ])
                 .from("shipment")
+                .whereNotNull("shipment_status")
         );
         view.checkOption();
     });

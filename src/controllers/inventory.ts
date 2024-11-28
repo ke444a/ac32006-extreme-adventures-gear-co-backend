@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import InventoryService from "@/services/inventory";
 import { ResponseStatus } from "@/config/enums";
+import { convertSnakeCaseToCamel } from "@/utils/convertSnakeCaseToCamel";
 
 export const getBranchItemsByBranch = async (req: Request, res: Response) => {
     try {
         const branchItems = await InventoryService.getBranchItemsByBranch(req.user.branch_id!);
-        res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS, data: { branchItems } });
+        res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS, data: { branchItems: convertSnakeCaseToCamel(branchItems) } });
     } catch (error) {
         console.log(error);
         res.status(500).json(<APIResponse>{ message: "Internal server error", status: ResponseStatus.INTERNAL_SERVER_ERROR });

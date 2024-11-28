@@ -17,19 +17,19 @@ export async function seed(knex: Knex): Promise<void> {
 
     const factoryProductItemsIngestData = [];
     for (const factory of factories) {
-        const numberOfProducts = faker.number.int({ min: 5, max: 10 });
+        const numberOfProducts = faker.number.int({ min: 40, max: 60 });
         const selectedProducts = faker.helpers.arrayElements(products, numberOfProducts);
 
         for (const product of selectedProducts) {
             // Generate a random number of manufacturing batches per product
-            const numberOfBatches = faker.number.int({ min: 1, max: 5 });
+            const numberOfBatches = faker.number.int({ min: 1, max: 7 });
             for (let i = 0; i < numberOfBatches; i++) {
                 factoryProductItemsIngestData.push({
                     factory_id: factory.id,
                     product_id: product.id,
                     quantity: faker.number.int({ min: 5, max: 50 }),
                     manufactured_at: faker.date.between({
-                        from: "2021-01-01",
+                        from: "2018-01-01",
                         to: new Date()
                     })
                 });
@@ -44,28 +44,28 @@ export async function seed(knex: Knex): Promise<void> {
     const branches = await knex("branch").select("*");
     const shipmentItemsIngestData = [];
     for (const factory of factories) {
-        const numberOfShipments = faker.number.int({ min: 5, max: 20 });
+        const numberOfShipments = faker.number.int({ min: 150, max: 200 });
         for (let i = 0; i < numberOfShipments; i++) {
             // Select a random branch
             const branch = faker.helpers.arrayElement(branches);
-            // 40% chance of shipment being delivered
-            const isDelivered = faker.number.int({ min: 1, max: 10 }) <= 4;
+            // 60% chance of shipment being delivered
+            const isDelivered = faker.number.int({ min: 1, max: 10 }) <= 6;
             let shipmentStatus;
             let arrivedAt = null;
             let shippedAt = null;
             if (isDelivered) {
                 shippedAt = faker.date.between({
-                    from: "2020-01-01",
+                    from: "2018-01-01",
                     to: new Date()
                 });
                 arrivedAt = new Date(shippedAt);
-                arrivedAt.setDate(arrivedAt.getDate() + faker.number.int({ min: 3, max: 10 }));
+                arrivedAt.setDate(arrivedAt.getDate() + faker.number.int({ min: 3, max: 15 }));
                 shipmentStatus = "delivered";
             } else {
                 shipmentStatus = faker.helpers.arrayElement(["preparing_to_ship", "in_transit", "shipped"]);
                 if (shipmentStatus !== "preparing_to_ship") {
                     shippedAt = faker.date.between({
-                        from: "2020-01-01",
+                        from: "2018-01-01",
                         to: new Date()
                     });
                 }
@@ -83,7 +83,7 @@ export async function seed(knex: Knex): Promise<void> {
 
             // Create shipment items
             const factoryProductItems = insertedFactoryProductItems.filter(fpi => fpi.factory_id === factory.id);
-            const numberOfShipmentItems = faker.number.int({ min: 2, max: 5 });
+            const numberOfShipmentItems = faker.number.int({ min: 5, max: 15 });
             const selectedFactoryProductItems = faker.helpers.arrayElements(factoryProductItems, numberOfShipmentItems);
             
             for (const factoryProductItem of selectedFactoryProductItems) {

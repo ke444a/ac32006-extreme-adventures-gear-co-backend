@@ -1,12 +1,12 @@
 import knex from "@/config/db";
-import { AdminViews, GlobalViews } from "@/config/enums";
+import { AdminViews, GlobalViews, SalesRepresentativeViews } from "@/config/enums";
 
 const getProductsByIdsQuery = (ids: number[]) => {
     return knex("product").whereIn("id", ids);
 };
 
 const getAllProductsQuery = () => {
-    return knex<IAdminAllProductsView>(AdminViews.ALL_PRODUCTS);
+    return knex<IGlobalAllProductsView>(GlobalViews.ALL_PRODUCTS);
 };
 
 const getProductCategoriesQuery = () => {
@@ -21,10 +21,20 @@ const deleteProductQuery = (productId: number) => {
     return knex<IAdminModifyProductView>(AdminViews.MODIFY_PRODUCT).where("id", productId).delete();
 };
 
+const getProductsByBranchQuery = (branchId: number) => {
+    return knex<ISalesRepBranchProductsView>(SalesRepresentativeViews.PRODUCTS_IN_BRANCH).where({ branch_id: branchId });
+};
+
+const updateProductPriceQuery = (productId: number, price: number) => {
+    return knex<ISalesRepModifyProductView>(SalesRepresentativeViews.MODIFY_PRODUCT).where({ id: productId }).update({ price });
+};
+
 export { 
     getProductsByIdsQuery,
     getAllProductsQuery,
     getProductCategoriesQuery,
     updateProductQuery,
-    deleteProductQuery
+    deleteProductQuery,
+    getProductsByBranchQuery,
+    updateProductPriceQuery
 };

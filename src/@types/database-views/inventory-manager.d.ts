@@ -25,6 +25,7 @@ interface IInventoryManagerBranchItemsInBranchView {
     quantity: number;
     price: number;
     warranty_duration: number;
+    last_restocked_at: Date;
 }
 
 /**
@@ -33,7 +34,8 @@ interface IInventoryManagerBranchItemsInBranchView {
 interface IInventoryManagerAllShipmentsToBranchView {
     shipment_id: number;
     branch_id: number;
-    factory_location_id: number;
+    branch_city: string;
+    factory_id: number;
     factory_city: string;
     shipment_status: ShipmentStatusDB;
     shipped_at: Date;

@@ -47,3 +47,24 @@ export const updateFactoryDetails = async (req: Request, res: Response) => {
         res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
     }
 };
+
+export const getFactoryDetails = async (req: Request, res: Response) => {
+    try {
+        const locationId = parseInt(req.params.locationId);
+        const factoryDetails = await LocationsService.getFactoryDetails(locationId);
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { factory: convertSnakeCaseToCamel(factoryDetails) } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
+    }
+};
+
+export const getHeadquarterStatistics = async (_req: Request, res: Response) => {
+    try {
+        const statistics = await LocationsService.getHeadquarterStatistics();
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { statistics: convertSnakeCaseToCamel(statistics) } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
+    }
+};

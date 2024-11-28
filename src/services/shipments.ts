@@ -6,7 +6,8 @@ import {
     updateShipmentStatusForFactoryQuery,
     createShipmentQuery,
     createShipmentItemsQuery,
-    getAllShipmentsForFactoryQuery
+    getAllShipmentsForFactoryQuery,
+    deleteShipmentQuery
 } from "@/queries/shipments";
 
 
@@ -52,6 +53,10 @@ class ShipmentsService {
             return { ...shipment, items };
         });
         return shipmentsWithItems;
+    }
+
+    public async deleteShipment(shipmentId: number) {
+        return await deleteShipmentQuery(shipmentId);
     }
 }
 

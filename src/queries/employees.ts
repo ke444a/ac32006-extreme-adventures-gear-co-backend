@@ -1,5 +1,5 @@
 import knex from "@/config/db";
-import { AdminViews, FactoryManagerViews } from "@/config/enums";
+import { AdminViews, FactoryManagerViews, GlobalViews } from "@/config/enums";
 
 const getEmployeeByIdQuery = async (id: number) => {
     const employee = await knex("employee")
@@ -26,29 +26,34 @@ const getEmployeeByIdQuery = async (id: number) => {
     return employee;
 };
 
+const getEmployeeDetailsQuery = async (employeeId: number) => {
+    return await knex<IAuthenticatedEmployeeDetailsView>(GlobalViews.AUTHENTICATED_EMPLOYEE_DETAILS)
+        .where({ id: employeeId });
+};
+
 const getEmployeesByFactoryIdQuery = async (factoryId: number) => {
     return await knex<IFactoryManagerEmployeesView>(FactoryManagerViews.FACTORY_EMPLOYEES)
         .where({ factory_id: factoryId });
 };
 
 const updateFactoryEmployeeQuery = async (
-    factoryId: number,
+    _factoryId: number,
     employeeId: number,
     updatedEmployeeData: Partial<IFactoryManagerModifyEmployeeView>
 ) => {
     return await knex(FactoryManagerViews.MODIFY_FACTORY_EMPLOYEE)
         .where({
             id: employeeId,
-            factory_id: factoryId
+            // factory_id: factoryId
         })
         .update(updatedEmployeeData);
 };
 
-const deleteFactoryEmployeeQuery = async (factoryId: number, employeeId: number) => {
+const deleteFactoryEmployeeQuery = async (_factoryId: number, employeeId: number) => {
     return await knex(FactoryManagerViews.MODIFY_FACTORY_EMPLOYEE)
         .where({
             id: employeeId,
-            factory_id: factoryId
+            // factory_id: factoryId
         })
         .delete();
 };
@@ -106,5 +111,6 @@ export {
     updateEmployeeQuery,
     deleteEmployeeQuery,
     getWorkScheduleIdQuery,
-    getRoleIdQuery
+    getRoleIdQuery,
+    getEmployeeDetailsQuery
 };

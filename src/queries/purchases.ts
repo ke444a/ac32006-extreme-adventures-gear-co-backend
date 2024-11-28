@@ -49,7 +49,7 @@ const getAllPurchaseItemsByPurchaseIdsQuery = async (purchaseIds: number[]) => {
 };
 
 const deletePurchaseQuery = async (purchaseId: number) => {
-    await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("id", purchaseId).delete();
+    await knex<ISalesRepModifyPurchaseView>(SalesRepresentativeViews.MODIFY_PURCHASE).where({ purchase_id: purchaseId }).delete();
 };
 
 const getAllPurchasesQuery = async () => {

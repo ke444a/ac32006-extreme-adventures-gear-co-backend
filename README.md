@@ -15,8 +15,7 @@
     * They can only delete purchases that are associated with their branch
 - View all products available in their branch
 - Modify product details
-    * Allow to modify only products that are available in their branch
-    * Forbid to modify product price
+    * Allow to modify only product price
 
 
 ### Inventory manager

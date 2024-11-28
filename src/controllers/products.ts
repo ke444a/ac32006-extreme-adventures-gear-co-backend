@@ -13,6 +13,16 @@ export const getAllProducts = async (_req: Request, res: Response) => {
     }
 };
 
+export const getProductsByBranch = async (req: Request, res: Response) => {
+    try {
+        const products = await ProductsService.getProductsByBranch(req.user.branch_id!);
+        res.status(200).json({ status: ResponseStatus.SUCCESS, data: { products: convertSnakeCaseToCamel(products) } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
+    }
+};
+
 export const getProductCategories = async (_req: Request, res: Response) => {
     try {
         const productCategories = await ProductsService.getProductCategories();
