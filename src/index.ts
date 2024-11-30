@@ -1,4 +1,3 @@
-import { PORT } from "@/config/env";
 import ExpressConfig from "@/config/express";
 import authRoutes from "@/routes/auth";
 import purchasesRouter from "@/routes/purchases";
@@ -26,6 +25,6 @@ app.use("/payments", paymentsRouter);
 app.use("/locations", locationsRouter);
 app.use("/products", productsRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(8080, () => {
+    console.log("Server is running on port 8080");
 });

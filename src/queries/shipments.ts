@@ -10,7 +10,8 @@ const getUpcomingShipmentsForBranchQuery = async (branchId: number) => {
 };
 
 const getShipmentItemsByShipmentIdsQuery = async (shipmentIds: number[]) => {
-    return await knex<IInventoryManagerShipmentDetailsView>(InventoryManagerViews.SHIPMENT_DETAILS).whereIn("shipment_id", shipmentIds);
+    // Accessible by both inventory manager and admin
+    return await knex<IInventoryManagerShipmentDetailsView | IAdminShipmentDetailsView>(InventoryManagerViews.SHIPMENT_DETAILS).whereIn("shipment_id", shipmentIds);
 };
 
 const createShipmentQuery = async (factoryId: number, branchId: number) => {
@@ -55,7 +56,8 @@ const createShipmentItemsQuery = async (shipmentId: number, shipmentItems: IShip
 };
 
 const getAllShipmentsForFactoryQuery = async (factoryId: number) => {
-    return await knex<IFactoryManagerAllShipmentsView>(FactoryManagerViews.ALL_SHIPMENTS).where("factory_id", factoryId);
+    // Accessible by both factory manager and admin
+    return await knex<IFactoryManagerAllShipmentsView | IAdminAllShipmentsView>(FactoryManagerViews.ALL_SHIPMENTS).where("factory_id", factoryId);
 };
 
 const deleteShipmentQuery = async (shipmentId: number) => {

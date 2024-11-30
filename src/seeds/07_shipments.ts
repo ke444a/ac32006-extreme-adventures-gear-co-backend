@@ -8,6 +8,8 @@ import { Knex } from "knex";
 import { faker } from "@faker-js/faker";
 
 export async function seed(knex: Knex): Promise<void> {
+    console.log("Seeding shipments...");
+
     await knex("shipment_item").del();
     await knex("shipment").del();
     await knex("factory_product_item").del();
@@ -15,11 +17,13 @@ export async function seed(knex: Knex): Promise<void> {
     const factories = await knex("factory").select("*");
     const products = await knex("product").select("*");
 
+    console.log("Generating factory product items...");
     const factoryProductItemsIngestData = [];
     for (const factory of factories) {
+        console.log("Generating factory product items for factory 1...");
         const numberOfProducts = faker.number.int({ min: 40, max: 60 });
         const selectedProducts = faker.helpers.arrayElements(products, numberOfProducts);
-
+        console.log(`Selected ${selectedProducts.length} products for factory 1`);
         for (const product of selectedProducts) {
             // Generate a random number of manufacturing batches per product
             const numberOfBatches = faker.number.int({ min: 1, max: 7 });
@@ -35,12 +39,16 @@ export async function seed(knex: Knex): Promise<void> {
                 });
             }
         }
+        console.log("Generated  product items for factory 1");
     }
+    
 
     // Insert factory product items and get their IDs
     await knex("factory_product_item").insert(factoryProductItemsIngestData);
     const insertedFactoryProductItems = await knex("factory_product_item").select("*");
+    console.log("Inserting factory product items completed.");
 
+    console.log("Generating shipments...");
     const branches = await knex("branch").select("*");
     const shipmentItemsIngestData = [];
     for (const factory of factories) {

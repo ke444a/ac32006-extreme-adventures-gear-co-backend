@@ -3,7 +3,7 @@
         "pretty": true,
         "target": "es2020",
         "module": "NodeNext",
-        "rootDir": "./",
+        "rootDir": "./src",
         "moduleResolution": "NodeNext",
         "sourceMap": true,
         "outDir": "./dist",
@@ -34,12 +34,14 @@
             "@/*": [
                 "./src/*"
             ]
-        }
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths"
+            }
+        ]
     },
-    "include": [
-        "**/*.ts",
-        "src/**/*"
-, "knexfile.ts"    ],
+    "include": ["src/**/*"],
     "exclude": [
         "node_modules",
         "scripts"

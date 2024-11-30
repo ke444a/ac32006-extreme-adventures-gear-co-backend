@@ -299,7 +299,7 @@ export async function up(knex: Knex): Promise<void> {
     // View purchase summary: info about each purchase without purchase items
     await knex.schema.createView("admin_purchase_summary_view", (view) => {
         view.columns([
-            "id",
+            "purchase_id",
             "customer_name",
             "customer_email",
             "total_price",

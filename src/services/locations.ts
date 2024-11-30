@@ -6,6 +6,7 @@ import { getAllPayrollsByLocationQuery } from "@/queries/payments";
 import { getAllPurchasesByLocationQuery } from "@/queries/purchases";
 import { getAllShipmentsForFactoryQuery, getShipmentItemsByShipmentIdsQuery } from "@/queries/shipments";
 
+
 class LocationsService {
     public async getAllLocations() {
         return await getAllLocationsQuery();

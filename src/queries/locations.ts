@@ -19,7 +19,7 @@ const updateFactoryDetailsQuery = (factoryId: number, productionTarget: number) 
     return knex<IAdminModifyFactoryView>(AdminViews.MODIFY_FACTORY)
         .where({ id: factoryId })
         .update({ production_target: productionTarget });
-};  
+};
 
 const getCategorySalesAnalyticsQuery = async () => {
     return await knex<IAdminCategorySalesView>(AdminAnalyticsViews.CATEGORY_SALES);

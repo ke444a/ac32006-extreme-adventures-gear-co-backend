@@ -16,7 +16,7 @@ export const getAllFactoryEmployees = async (req: Request, res: Response) => {
 export const updateFactoryEmployeeDetails = async (req: Request, res: Response) => {
     try {
         const employeeId = parseInt(req.params.employeeId);
-        await EmployeesService.updateFactoryEmployeeDetails(req.user.factory_id!, employeeId, req.body as RequestBodyPATCH["EMPLOYEE"]);
+        await EmployeesService.updateFactoryEmployeeDetails(employeeId, req.body as RequestBodyPATCH["EMPLOYEE"]);
         res.status(200).json(<APIResponse>{ message: "Employee details updated successfully", status: ResponseStatus.SUCCESS });
     } catch (error) {
         console.log(error);
@@ -26,7 +26,8 @@ export const updateFactoryEmployeeDetails = async (req: Request, res: Response) 
 
 export const deleteFactoryEmployee = async (req: Request, res: Response) => {
     try {
-        await EmployeesService.deleteFactoryEmployee(req.user.factory_id!, parseInt(req.params.employeeId));
+        const employeeId = parseInt(req.params.employeeId);
+        await EmployeesService.deleteFactoryEmployee(employeeId);
         res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS });
     } catch (error) {
         console.log(error);

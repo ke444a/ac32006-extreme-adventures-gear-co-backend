@@ -14,12 +14,12 @@ export const authCheck = async (req: Request, res: Response, next: NextFunction)
 
     try {
         const decoded = jwt.verify(token, TOKEN_SECRET as string) as JwtPayload;
-        const user = await getEmployeeByIdQuery(decoded.id);
+        const [user] = await getEmployeeByIdQuery(decoded.id);
         if (!user) {
             res.status(401).json(<APIResponse>{ status: ResponseStatus.INVALID_TOKEN, message: "Invalid token" });
             return;
         }
-        req.user = user;
+        req.user = user as IAuthenticatedEmployee;
         next();
     } catch (_error) {
         res.status(401).json(<APIResponse>{ status: ResponseStatus.INVALID_TOKEN, message: "Invalid token" });

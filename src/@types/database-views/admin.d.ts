@@ -173,6 +173,11 @@ interface IAdminModifyFactoryView {
 // }
 
 /**
+ * View for all shipment items by branch
+ */
+type IAdminShipmentDetailsView = IInventoryManagerShipmentDetailsView;
+
+/**
  * View for modifying products
  */
 interface IAdminModifyProductView {
@@ -222,3 +227,13 @@ interface IAdminYearlySummaryView {
     unique_customers: number;
     average_order_value: number;
 }
+
+/**
+ * View for all shipments for factory
+ */
+type IAdminAllShipmentsView = IFactoryManagerAllShipmentsView;
+
+/**
+ * View for all manufactured products for factory
+ */
+type IAdminManufacturedProductsView = IFactoryManagerManufacturedProductsView;

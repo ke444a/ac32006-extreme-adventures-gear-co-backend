@@ -12,7 +12,8 @@ const createFactoryProductItemQuery = async (factoryId: number, productId: numbe
 };
 
 const getAllFactoryProductItemsQuery = async (factoryId: number) => {
-    return await knex<IFactoryManagerManufacturedProductsView>(FactoryManagerViews.MANUFACTURED_PRODUCTS)
+    // Accessible by both factory manager and admin
+    return await knex<IFactoryManagerManufacturedProductsView | IAdminManufacturedProductsView>(FactoryManagerViews.MANUFACTURED_PRODUCTS)
         .where("factory_id", factoryId);
 };
 

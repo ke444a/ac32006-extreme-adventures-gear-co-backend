@@ -17,7 +17,6 @@ class EmployeesService {
     }
 
     public async updateFactoryEmployeeDetails(
-        factoryId: number, 
         employeeId: number, 
         employeeData: RequestBodyPATCH["EMPLOYEE"]
     ) {
@@ -34,11 +33,11 @@ class EmployeesService {
         if (employeeData.employmentType) updateData.employment_type = employeeData.employmentType;
         if (workScheduleId) updateData.work_schedule_id = workScheduleId;
         
-        return await updateFactoryEmployeeQuery(factoryId, employeeId, updateData);
+        return await updateFactoryEmployeeQuery(employeeId, updateData);
     }
 
-    public async deleteFactoryEmployee(factoryId: number, employeeId: number) {
-        return await deleteFactoryEmployeeQuery(factoryId, employeeId);
+    public async deleteFactoryEmployee(employeeId: number) {
+        return await deleteFactoryEmployeeQuery(employeeId);
     }
 
     public async getAllEmployees() {

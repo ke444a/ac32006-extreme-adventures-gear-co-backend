@@ -38,13 +38,13 @@ export enum InventoryManagerViews {
     BRANCH_ITEMS_IN_BRANCH = "inventory_manager_branch_items_in_branch_view",
     ALL_SHIPMENTS_TO_BRANCH = "inventory_manager_all_shipments_to_branch_view",
     UPCOMING_SHIPMENTS_TO_BRANCH = "inventory_manager_upcoming_shipments_to_branch_view",
-    SHIPMENT_DETAILS = "inventory_manager_shipment_details_view",
+    SHIPMENT_DETAILS = "admin_and_inventory_manager_shipment_details_view",
     UPDATE_SHIPMENT_STATUS = "inventory_manager_update_shipment_status_view"
 }
 
 export enum FactoryManagerViews {
-    ALL_SHIPMENTS = "factory_manager_all_shipments_view",
-    MANUFACTURED_PRODUCTS = "factory_manager_manufactured_products_view",
+    ALL_SHIPMENTS = "admin_and_factory_manager_all_shipments_view",
+    MANUFACTURED_PRODUCTS = "admin_and_factory_manager_manufactured_products_view",
     FACTORY_EMPLOYEES = "factory_manager_employees_view",
     MODIFY_SHIPMENT = "factory_manager_modify_shipment_view",
     MODIFY_MANUFACTURED_PRODUCT = "factory_manager_modify_manufactured_product_view",
@@ -67,7 +67,6 @@ export enum AdminViews {
     LOCATION_DETAILS = "admin_location_details_view",
     MODIFY_BRANCH = "admin_modify_branch_view",
     MODIFY_FACTORY = "admin_modify_factory_view",
-    // ALL_PRODUCTS = "admin_all_products_view",
     MODIFY_PRODUCT = "admin_modify_product_view"
 }
 

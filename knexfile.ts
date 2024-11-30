@@ -15,6 +15,21 @@ const config: { [key: string]: Knex.Config } = {
         seeds: {
             directory: "./src/seeds"
         }
+    },
+    production: {
+        client: "mysql2",
+        connection: {
+            host: "extreme-adventures-test.c4nqamxesyxh.us-east-1.rds.amazonaws.com",
+            user: "admin",
+            password: "123PASSWORD###123",
+            database: "extreme_adventures_db"
+        },
+        migrations: {
+            directory: "./src/migrations"
+        },
+        seeds: {
+            directory: "./src/seeds"
+        }
     }
 };
 

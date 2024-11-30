@@ -10,6 +10,7 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 
 export async function seed(knex: Knex): Promise<void> {
+    console.log("Seeding employees...");
     // Deletes ALL existing entries
     await knex("employee_credentials").del();
     await knex("employee").del();
@@ -55,6 +56,7 @@ export async function seed(knex: Knex): Promise<void> {
         location_id: locationId
     });
 
+    console.log("Generating employees...");
     // Generate employees
     const employeesIngestData = [
         // Admin: 1 employee
@@ -79,6 +81,7 @@ export async function seed(knex: Knex): Promise<void> {
         )
     ];
 
+    console.log("Inserting employees...");
     await knex("employee").insert(employeesIngestData);
     const insertedEmployees = await knex("employee").select("*");
 
@@ -131,4 +134,6 @@ export async function seed(knex: Knex): Promise<void> {
     }
 
     await knex("payroll").insert(payrollsIngestData);
+
+    console.log("Seeding employees completed.");
 };

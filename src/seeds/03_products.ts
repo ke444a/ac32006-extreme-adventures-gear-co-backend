@@ -80,6 +80,7 @@ const IMAGE_URLS: Record<typeof PRODUCT_CATEGORIES[number], string[]> = {
 };
 
 export async function seed(knex: Knex): Promise<void> {
+    console.log("Seeding products...");
     // Deletes ALL existing entries
     await knex("product").del();
     await knex("product_category").del();
@@ -110,4 +111,6 @@ export async function seed(knex: Knex): Promise<void> {
     }
 
     await knex("product").insert(productsIngestData);
+
+    console.log("Seeding products completed.");
 };

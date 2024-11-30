@@ -29,7 +29,7 @@ export const updateBranchDetails = async (req: Request, res: Response) => {
         const branchId = parseInt(req.params.branchId);
         const { salesTarget } = req.body as { salesTarget: number };
         await LocationsService.updateBranchDetails(branchId, salesTarget);
-        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Branch details updated successfully" });
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, message: "Branch sales target updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });

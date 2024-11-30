@@ -1,32 +1,32 @@
 import knex from "@/config/db";
 import { AdminViews, FactoryManagerViews, GlobalViews } from "@/config/enums";
 
-const getEmployeeByIdQuery = async (id: number) => {
-    const employee = await knex("employee")
-        .select([
-            "employee.*",
-            "employee_role.name as role",
-            "location.location_type as location_type",
-            "location.city as location_city",
-            "location.address as location_address"
-        ])
-        .join("employee_role", "employee.role_id", "employee_role.id")
-        .join("location", "employee.location_id", "location.id")
-        .where("employee.id", id)
-        .first();
+// const getEmployeeByIdQuery = async (id: number) => {
+//     const employee = await knex("employee")
+//         .select([
+//             "employee.*",
+//             "employee_role.name as role",
+//             "location.location_type as location_type",
+//             "location.city as location_city",
+//             "location.address as location_address"
+//         ])
+//         .join("employee_role", "employee.role_id", "employee_role.id")
+//         .join("location", "employee.location_id", "location.id")
+//         .where("employee.id", id)
+//         .first();
 
-    const location = await knex("location").where("id", employee?.location_id).first();
-    if (location?.location_type === "branch") {
-        const branch = await knex("branch").where("location_id", location.id).first();
-        return { ...employee, branch_id: branch?.id };
-    } else if (location?.location_type === "factory") {
-        const factory = await knex("factory").where("location_id", location.id).first();
-        return { ...employee, factory_id: factory?.id };
-    }
-    return employee;
-};
+//     const location = await knex("location").where("id", employee?.location_id).first();
+//     if (location?.location_type === "branch") {
+//         const branch = await knex("branch").where("location_id", location.id).first();
+//         return { ...employee, branch_id: branch?.id };
+//     } else if (location?.location_type === "factory") {
+//         const factory = await knex("factory").where("location_id", location.id).first();
+//         return { ...employee, factory_id: factory?.id };
+//     }
+//     return employee;
+// };
 
-const getEmployeeDetailsQuery = async (employeeId: number) => {
+const getEmployeeByIdQuery = async (employeeId: number) => {
     return await knex<IAuthenticatedEmployeeDetailsView>(GlobalViews.AUTHENTICATED_EMPLOYEE_DETAILS)
         .where({ id: employeeId });
 };
@@ -37,7 +37,6 @@ const getEmployeesByFactoryIdQuery = async (factoryId: number) => {
 };
 
 const updateFactoryEmployeeQuery = async (
-    _factoryId: number,
     employeeId: number,
     updatedEmployeeData: Partial<IFactoryManagerModifyEmployeeView>
 ) => {
@@ -49,7 +48,7 @@ const updateFactoryEmployeeQuery = async (
         .update(updatedEmployeeData);
 };
 
-const deleteFactoryEmployeeQuery = async (_factoryId: number, employeeId: number) => {
+const deleteFactoryEmployeeQuery = async (employeeId: number) => {
     return await knex(FactoryManagerViews.MODIFY_FACTORY_EMPLOYEE)
         .where({
             id: employeeId,
@@ -112,5 +111,4 @@ export {
     deleteEmployeeQuery,
     getWorkScheduleIdQuery,
     getRoleIdQuery,
-    getEmployeeDetailsQuery
 };

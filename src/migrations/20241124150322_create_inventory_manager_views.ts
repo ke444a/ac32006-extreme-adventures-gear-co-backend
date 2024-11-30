@@ -150,7 +150,7 @@ export async function up(knex: Knex): Promise<void> {
     });
 
     // View shipment items for specific shipment
-    await knex.schema.createView("inventory_manager_shipment_details_view", (view) => {
+    await knex.schema.createView("admin_and_inventory_manager_shipment_details_view", (view) => {
         view.columns([
             "shipment_id",
             "product_id",
@@ -206,7 +206,7 @@ export async function down(knex: Knex): Promise<void> {
         "inventory_manager_branch_items_in_branch_view",
         "inventory_manager_all_shipments_to_branch_view",
         "inventory_manager_upcoming_shipments_to_branch_view",
-        "inventory_manager_shipment_details_view",
+        "admin_and_inventory_manager_shipment_details_view",
         "inventory_manager_update_shipment_status_view"
     ];
 

@@ -2,7 +2,7 @@ import type { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
     // View all shipments from specific factory
-    await knex.schema.createView("factory_manager_all_shipments_view", (view) => {
+    await knex.schema.createView("admin_and_factory_manager_all_shipments_view", (view) => {
         view.columns([
             "shipment_id",
             "branch_id",
@@ -45,7 +45,7 @@ export async function up(knex: Knex): Promise<void> {
     });
 
     // View all manufactured products in specific factory
-    await knex.schema.createView("factory_manager_manufactured_products_view", (view) => {
+    await knex.schema.createView("admin_and_factory_manager_manufactured_products_view", (view) => {
         view.columns([
             "factory_product_id",
             "factory_id",
@@ -276,8 +276,8 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
     const views = [
-        "factory_manager_all_shipments_view",
-        "factory_manager_manufactured_products_view",
+        "admin_and_factory_manager_all_shipments_view",
+        "admin_and_factory_manager_manufactured_products_view",
         "factory_manager_employees_view",
         "factory_manager_modify_shipment_view",
         "factory_manager_modify_manufactured_product_view",

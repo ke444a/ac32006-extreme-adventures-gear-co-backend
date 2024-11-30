@@ -9,12 +9,13 @@ import { Knex } from "knex";
 import { faker } from "@faker-js/faker";
 
 export async function seed(knex: Knex): Promise<void> {
+    console.log("Seeding customers...");
     await knex("customer").del();
     await knex("purchase").del();
     await knex("purchase_item").del();
 
     const customersIngestData = [];
-    const CUSTOMERS_COUNT = 300;
+    const CUSTOMERS_COUNT = 120;
     for (let i = 0; i < CUSTOMERS_COUNT; i++) {
         // Create a customer
         customersIngestData.push({
@@ -30,6 +31,7 @@ export async function seed(knex: Knex): Promise<void> {
     }
     await knex("customer").insert(customersIngestData);
     const insertedCustomers = await knex("customer").select("*");
+    console.log("Seeding customers completed.");
 
     // Get branches, employees and products for creating purchases
     const branches = await knex("branch").select("*");
@@ -39,12 +41,15 @@ export async function seed(knex: Knex): Promise<void> {
     const branchItems = await knex("branch_item")
         .select("*")
         .where("quantity", ">", 0);
-    
+
+
+    console.log("Generating purchases...");
     // Generate purchases for each customer
     const purchaseItemsIngestData = [];
     for (const customer of insertedCustomers) {
         // Each customer makes 1-20 purchases
-        const numberOfPurchases = faker.number.int({ min: 1, max: 20 });
+        const MAX_PURCHASES_PER_CUSTOMER = 5;
+        const numberOfPurchases = faker.number.int({ min: 1, max: MAX_PURCHASES_PER_CUSTOMER });
 
         for (let i = 0; i < numberOfPurchases; i++) {
             // Create payment for each purchase with 0 amount
@@ -82,8 +87,10 @@ export async function seed(knex: Knex): Promise<void> {
             const selectedItems = faker.helpers.arrayElements(availableItems, numberOfItems);
 
             let totalAmount = 0;
+            const selectedItemsProductIds = selectedItems.map(item => item.product_id);
+            const selectedProducts = await knex("product").select("*").whereIn("id", selectedItemsProductIds);
             for (const branchItem of selectedItems) {
-                const product = await knex("product").select("*").where("id", branchItem.product_id).first();
+                const product = selectedProducts.find(product => product.id === branchItem.product_id);
                 const quantity = faker.number.int({ min: 1, max: Math.min(7, branchItem.quantity) });
                 const purchaseItem = {
                     product_id: branchItem.product_id,
@@ -106,4 +113,5 @@ export async function seed(knex: Knex): Promise<void> {
     }
 
     await knex("purchase_item").insert(purchaseItemsIngestData);
+    console.log("Seeding purchases completed.");
 };

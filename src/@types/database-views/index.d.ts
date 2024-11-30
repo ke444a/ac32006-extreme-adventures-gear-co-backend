@@ -18,10 +18,10 @@ interface IAuthenticatedEmployeeDetailsView {
     id: number;
     name: string;
     email: string;
-    role: string;
+    role: IEmployeeRole;
     location_type: string;
     location_city: string;
     location_address: string;
-    branch_id: number;
-    factory_id: number;
+    branch_id: number | null;
+    factory_id: number | null;
 }
