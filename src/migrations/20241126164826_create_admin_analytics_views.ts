@@ -33,7 +33,6 @@ export async function up(knex: Knex): Promise<void> {
         view.as(
             knex.select([
                 "f.id as factory_id",
-                "f.factory_code",
                 "l.city as factory_city",
                 knex.raw("COUNT(DISTINCT s.id) as total_shipments"),
                 knex.raw(`
@@ -56,7 +55,6 @@ export async function up(knex: Knex): Promise<void> {
                 .whereNotNull("s.shipped_at")
                 .groupBy(
                     "f.id",
-                    "f.factory_code",
                     "l.city",
                     knex.raw("YEAR(s.shipped_at)")
                 )

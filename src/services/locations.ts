@@ -1,7 +1,7 @@
 import { PaymentStatus } from "@/config/enums";
 import { getEmployeesByLocationIdQuery } from "@/queries/employees";
 import { getAllFactoryProductItemsQuery } from "@/queries/factory-products";
-import { getAllLocationsQuery, getLocationByIdQuery, getCategorySalesAnalyticsQuery, getYearlySummaryAnalyticsQuery, updateBranchDetailsQuery, updateFactoryDetailsQuery, getFactoryShippingAnalyticsQuery } from "@/queries/locations";
+import { getAllLocationsQuery, getLocationByIdQuery, getCategorySalesAnalyticsQuery, getYearlySummaryAnalyticsQuery, updateBranchDetailsQuery, updateFactoryDetailsQuery, getFactoryShippingAnalyticsQuery, getAllBranchesQuery } from "@/queries/locations";
 import { getAllPayrollsByLocationQuery } from "@/queries/payments";
 import { getAllPurchasesByLocationQuery } from "@/queries/purchases";
 import { getAllShipmentsForFactoryQuery, getShipmentItemsByShipmentIdsQuery } from "@/queries/shipments";
@@ -10,6 +10,10 @@ import { getAllShipmentsForFactoryQuery, getShipmentItemsByShipmentIdsQuery } fr
 class LocationsService {
     public async getAllLocations() {
         return await getAllLocationsQuery();
+    }
+
+    public async getAllBranches() {
+        return await getAllBranchesQuery();
     }
 
     public async getBranchDetails(locationId: number) {
@@ -116,7 +120,6 @@ class LocationsService {
             if (!acc[row.factory_id]) {
                 acc[row.factory_id] = {
                     factory_id: row.factory_id,
-                    factory_code: row.factory_code,
                     factory_city: row.factory_city,
                     yearly_data: {}
                 };
@@ -132,9 +135,8 @@ class LocationsService {
             return acc;
         }, {} as Record<number, {
             factory_id: number;
-            factory_code: number;
             factory_city: string;
-            yearly_data: Record<number, Omit<IAdminFactoryShippingView, "factory_id" | "factory_code" | "factory_city" | "year">>;
+            yearly_data: Record<number, Omit<IAdminFactoryShippingView, "factory_id" | "factory_city" | "year">>;
         }>);
 
         // console.log(groupedFactoryShippingData);

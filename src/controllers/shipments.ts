@@ -70,6 +70,7 @@ export const updateShipmentStatusForFactory = async (req: Request, res: Response
 export const createShipment = async (req: Request, res: Response) => {
     try {
         const { branchId, shipmentItems } = req.body as RequestBodyPOST["SHIPMENT"];
+        console.log(branchId, shipmentItems);
         if (!branchId || !shipmentItems) {
             res.status(400).json(<APIResponse>{ message: "Missing required fields", status: ResponseStatus.INVALID_REQUEST_BODY });
             return;

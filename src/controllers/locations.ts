@@ -13,6 +13,16 @@ export const getAllLocations = async (_req: Request, res: Response) => {
     }
 };
 
+export const getAllBranches = async (_req: Request, res: Response) => {
+    try {
+        const branches = await LocationsService.getAllBranches();
+        res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { branches: convertSnakeCaseToCamel(branches) } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(<APIResponse>{ status: ResponseStatus.INTERNAL_SERVER_ERROR, message: "Internal server error" });
+    }
+};
+
 export const getBranchDetails = async (req: Request, res: Response) => {
     try {
         const locationId = parseInt(req.params.locationId);

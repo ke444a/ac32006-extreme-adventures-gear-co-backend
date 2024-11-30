@@ -10,7 +10,6 @@ interface IFactoryManagerAllShipmentsView {
     shipment_id: number;
     branch_id: number;
     factory_id: number;
-    branch_code: number;
     branch_city: string;
     shipment_status: ShipmentStatusDB;
     shipped_at: Date;

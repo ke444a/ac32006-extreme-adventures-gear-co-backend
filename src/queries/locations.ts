@@ -3,6 +3,8 @@ import { AdminAnalyticsViews, AdminViews } from "@/config/enums";
 
 const getAllLocationsQuery = () => knex<IAdminAllLocationsView>(AdminViews.ALL_LOCATIONS);
 
+const getAllBranchesQuery = () => knex<IAdminAllLocationsView>(AdminViews.ALL_LOCATIONS)
+    .where({ location_type: "branch" });
 
 const getLocationByIdQuery = (locationId: number) => {
     return knex<IAdminLocationDetailsView>(AdminViews.LOCATION_DETAILS)
@@ -35,6 +37,7 @@ const getYearlySummaryAnalyticsQuery = async () => {
 
 export {
     getAllLocationsQuery,
+    getAllBranchesQuery,
     getLocationByIdQuery,
     updateBranchDetailsQuery,
     updateFactoryDetailsQuery,

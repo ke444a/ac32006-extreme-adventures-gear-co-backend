@@ -52,7 +52,7 @@ export async function seed(knex: Knex): Promise<void> {
     const branches = await knex("branch").select("*");
     const shipmentItemsIngestData = [];
     for (const factory of factories) {
-        const numberOfShipments = faker.number.int({ min: 150, max: 200 });
+        const numberOfShipments = faker.number.int({ min: 50, max: 100 });
         for (let i = 0; i < numberOfShipments; i++) {
             // Select a random branch
             const branch = faker.helpers.arrayElement(branches);
@@ -91,7 +91,7 @@ export async function seed(knex: Knex): Promise<void> {
 
             // Create shipment items
             const factoryProductItems = insertedFactoryProductItems.filter(fpi => fpi.factory_id === factory.id);
-            const numberOfShipmentItems = faker.number.int({ min: 5, max: 15 });
+            const numberOfShipmentItems = faker.number.int({ min: 3, max: 7 });
             const selectedFactoryProductItems = faker.helpers.arrayElements(factoryProductItems, numberOfShipmentItems);
             
             for (const factoryProductItem of selectedFactoryProductItems) {

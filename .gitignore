@@ -3,3 +3,4 @@ node_modules/
 textfile
 .DS_Store
 dist/
+credentials.json

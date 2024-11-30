@@ -1,10 +1,19 @@
 import { EmployeeRole } from "@/config/enums";
 import { verifyRoles } from "@/middleware/verifyRoles";
-import { getAllLocations, getBranchDetails, getFactoryDetails, getHeadquarterStatistics, updateBranchDetails, updateFactoryDetails } from "@/controllers/locations";
+import { 
+    getAllLocations, 
+    getBranchDetails, 
+    getFactoryDetails, 
+    getHeadquarterStatistics, 
+    updateBranchDetails, 
+    updateFactoryDetails, 
+    getAllBranches 
+} from "@/controllers/locations";
 import { Router } from "express";
 
 const router = Router();
 
+router.get("/branch/all", verifyRoles([EmployeeRole.ADMIN, EmployeeRole.FACTORY_MANAGER]), getAllBranches);
 router.get("/branch/:locationId", verifyRoles([EmployeeRole.ADMIN]), getBranchDetails);
 router.get("/factory/:locationId", verifyRoles([EmployeeRole.ADMIN]), getFactoryDetails);
 router.get("/hq/statistics", verifyRoles([EmployeeRole.ADMIN]), getHeadquarterStatistics);

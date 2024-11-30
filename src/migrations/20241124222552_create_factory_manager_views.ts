@@ -7,24 +7,24 @@ export async function up(knex: Knex): Promise<void> {
             "shipment_id",
             "branch_id",
             "factory_id",
-            "branch_code",
             "branch_city",
             "shipment_status",
             "shipped_at",
             "arrived_at",
-            "total_items"
+            "total_items",
+            "updated_at"
         ]);
         view.as(
             knex.select([
                 "s.id as shipment_id",
                 "b.id as branch_id",
                 "f.id as factory_id",
-                "b.branch_code as branch_code",
                 "l.city as branch_city",
                 "s.shipment_status",
                 "s.shipped_at",
                 "s.arrived_at",
-                knex.raw("SUM(si.quantity_shipped) as total_items")
+                knex.raw("SUM(si.quantity_shipped) as total_items"),
+                "s.updated_at"
             ])
                 .from("shipment as s")
                 .join("branch as b", "s.branch_id", "b.id")
@@ -34,13 +34,12 @@ export async function up(knex: Knex): Promise<void> {
                 .groupBy(
                     "s.id",
                     "b.id",
-                    "b.branch_code",
                     "l.city",
                     "s.shipment_status",
                     "s.shipped_at",
                     "s.arrived_at"
                 )
-                .orderBy("s.shipped_at", "desc")
+                .orderBy("s.updated_at", "desc")
         );
     });
 
@@ -125,7 +124,8 @@ export async function up(knex: Knex): Promise<void> {
             "branch_id",
             "shipment_status",
             "shipped_at",
-            "arrived_at"
+            "arrived_at",
+            "updated_at"
         ]);
         view.as(
             knex.select([
@@ -134,7 +134,8 @@ export async function up(knex: Knex): Promise<void> {
                 "branch_id",
                 "shipment_status",
                 "shipped_at",
-                "arrived_at"
+                "arrived_at",
+                "updated_at"
             ])
                 .from("shipment")
         );

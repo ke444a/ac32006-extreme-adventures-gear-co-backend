@@ -18,7 +18,7 @@ class AuthService {
         }
 
         const token = generateJwtToken(employeeId.toString(), TOKEN_SECRET as string, "1d");
-        const employee = await getEmployeeByIdQuery(employeeId);
+        const [employee] = await getEmployeeByIdQuery(employeeId);
         return { token, employee };
     }
 }

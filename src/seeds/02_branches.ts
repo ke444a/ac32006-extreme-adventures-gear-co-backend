@@ -20,12 +20,10 @@ export async function seed(knex: Knex): Promise<void> {
     const branchesIngestData = branchLocations.map(loc => ({
         location_id: loc.id,
         sales_target: faker.number.int({ min: 1000, max: 50000, multipleOf: 100 }),
-        branch_code: loc.id - 1
     }));
     const factoriesIngestData = factoryLocations.map(loc => ({
         location_id: loc.id,
         production_target: faker.number.int({ min: 1000, max: 10000, multipleOf: 100 }),
-        factory_code: loc.id - branchLocations.length - 1
     }));
 
     await knex("branch").insert(branchesIngestData);

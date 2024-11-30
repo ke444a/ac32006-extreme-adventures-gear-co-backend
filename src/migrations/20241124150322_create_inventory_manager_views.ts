@@ -69,7 +69,8 @@ export async function up(knex: Knex): Promise<void> {
             "shipment_status",
             "shipped_at",
             "arrived_at",
-            "total_items"
+            "total_items",
+            "updated_at"
         ]);
         view.as(
             knex.select([
@@ -81,7 +82,8 @@ export async function up(knex: Knex): Promise<void> {
                 "s.shipment_status",
                 "s.shipped_at",
                 "s.arrived_at",
-                knex.raw("SUM(si.quantity_shipped) as total_items")
+                knex.raw("SUM(si.quantity_shipped) as total_items"),
+                "s.updated_at"
             ])
                 .from("shipment as s")
                 .join("factory as f", "s.factory_id", "f.id")
@@ -98,7 +100,7 @@ export async function up(knex: Knex): Promise<void> {
                     "s.shipped_at",
                     "s.arrived_at"
                 )
-                .orderBy("s.shipped_at", "desc")
+                .orderBy("s.updated_at", "desc")
         );
     });
 
@@ -113,7 +115,8 @@ export async function up(knex: Knex): Promise<void> {
             "shipment_status",
             "shipped_at",
             "arrived_at",
-            "total_items"
+            "total_items",
+            "updated_at"
         ]);
         view.as(
             knex.select([
@@ -125,7 +128,8 @@ export async function up(knex: Knex): Promise<void> {
                 "s.shipment_status",
                 "s.shipped_at",
                 "s.arrived_at",
-                knex.raw("SUM(si.quantity_shipped) as total_items")
+                knex.raw("SUM(si.quantity_shipped) as total_items"),
+                "s.updated_at"
             ])
                 .from("shipment as s")
                 .join("factory as f", "s.factory_id", "f.id")
@@ -143,9 +147,10 @@ export async function up(knex: Knex): Promise<void> {
                     "bl.city",
                     "s.shipment_status",
                     "s.shipped_at",
-                    "s.arrived_at"
+                    "s.arrived_at",
+                    "s.updated_at"
                 )
-                .orderBy("s.shipped_at", "desc")
+                .orderBy("s.updated_at", "desc")
         );
     });
 

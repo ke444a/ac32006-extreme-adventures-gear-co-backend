@@ -44,12 +44,17 @@ export async function seed(knex: Knex): Promise<void> {
 
 
     console.log("Generating purchases...");
+    let counter = 0;
     // Generate purchases for each customer
     const purchaseItemsIngestData = [];
     for (const customer of insertedCustomers) {
         // Each customer makes 1-20 purchases
         const MAX_PURCHASES_PER_CUSTOMER = 5;
         const numberOfPurchases = faker.number.int({ min: 1, max: MAX_PURCHASES_PER_CUSTOMER });
+
+        if (counter % 100 === 0) {
+            console.log(`Processed ${counter} customers...`);
+        }
 
         for (let i = 0; i < numberOfPurchases; i++) {
             // Create payment for each purchase with 0 amount
@@ -64,7 +69,7 @@ export async function seed(knex: Knex): Promise<void> {
                 amount: 0
             };
             const [insertedPaymentId] = await knex("payment").insert(paymentDraft);
-            const insertedPayment = await knex("payment").select("*").where("id", insertedPaymentId).first();
+            // const insertedPayment = await knex("payment").select("*").where("id", insertedPaymentId).first();
 
             // Create purchase itself with 0 total amount
             const branchForPurchase = faker.helpers.arrayElement(branches);
@@ -73,12 +78,12 @@ export async function seed(knex: Knex): Promise<void> {
                 branch_id: branchForPurchase.id,
                 customer_id: customer.id,
                 employee_id: employeeForPurchase.id,
-                payment_id: insertedPayment.id,
+                payment_id: insertedPaymentId,
                 total_amount: 0,
-                purchase_date: insertedPayment.payment_date
+                purchase_date: paymentDraft.payment_date
             };
             const [insertedPurchaseId] = await knex("purchase").insert(purchaseDraft);
-            const insertedPurchase = await knex("purchase").select("*").where("id", insertedPurchaseId).first();
+            // const insertedPurchase = await knex("purchase").select("*").where("id", insertedPurchaseId).first();
 
             // Create 1-5 purchase items to associate with the purchase
             const numberOfItems = faker.number.int({ min: 1, max: 5 });
@@ -94,7 +99,7 @@ export async function seed(knex: Knex): Promise<void> {
                 const quantity = faker.number.int({ min: 1, max: Math.min(7, branchItem.quantity) });
                 const purchaseItem = {
                     product_id: branchItem.product_id,
-                    purchase_id: insertedPurchase.id,
+                    purchase_id: insertedPurchaseId,
                     quantity: quantity,
                     total_price: quantity * product.price
                 };
@@ -104,12 +109,13 @@ export async function seed(knex: Knex): Promise<void> {
 
             // Update purchase and payment with total amount
             await knex("purchase")
-                .where("id", insertedPurchase.id)
+                .where("id", insertedPurchaseId)
                 .update({ total_amount: totalAmount });
             await knex("payment")
-                .where("id", insertedPayment.id)
+                .where("id", insertedPaymentId)
                 .update({ amount: totalAmount });
         }
+        counter++;
     }
 
     await knex("purchase_item").insert(purchaseItemsIngestData);

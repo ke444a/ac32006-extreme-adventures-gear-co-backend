@@ -58,7 +58,6 @@ interface IAdminAllPaymentsView {
 interface IAdminAllPurchasesView {
     purchase_id: number;
     branch_id: number;
-    branch_code: number;
     customer_name: string | null;
     sales_rep_id: number;
     sales_rep_name: string;
@@ -114,8 +113,6 @@ interface IAdminAllLocationsView {
     location_type: "branch" | "factory" | "hq";
     city: string;
     address: string;
-    branch_code: number | null;
-    factory_code: number | null;
 }
 
 /**
@@ -128,8 +125,6 @@ interface IAdminLocationDetailsView {
     location_type: "branch" | "factory" | "hq";
     city: string;
     address: string;
-    branch_code: number | null;
-    factory_code: number | null;
     sales_target: number | null;
     production_target: number | null;
 }
@@ -208,7 +203,6 @@ interface IAdminCategorySalesView {
  */
 interface IAdminFactoryShippingView {
     factory_id: number;
-    factory_code: number;
     factory_city: string;
     total_shipments: number;
     completed_shipments: number;

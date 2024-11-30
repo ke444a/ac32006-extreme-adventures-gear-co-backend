@@ -27,6 +27,7 @@ const updateShipmentStatusForBranchQuery = async (shipmentId: number, status: Sh
     return await knex(InventoryManagerViews.UPDATE_SHIPMENT_STATUS).where("id", shipmentId).update({
         shipment_status: status,
         arrived_at: knex.fn.now(),
+        updated_at: knex.fn.now()
     });
 };
 
@@ -43,7 +44,8 @@ const updateShipmentStatusForFactoryQuery = async (shipmentId: number, status: S
     return await knex(FactoryManagerViews.UPDATE_SHIPMENT_STATUS).where("id", shipmentId).update({
         shipment_status: status,
         shipped_at: shippedAt,
-        branch_id: branchId
+        branch_id: branchId,
+        updated_at: knex.fn.now()
     });
 };
 

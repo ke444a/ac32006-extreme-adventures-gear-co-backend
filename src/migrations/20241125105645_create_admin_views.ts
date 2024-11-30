@@ -129,7 +129,6 @@ export async function up(knex: Knex): Promise<void> {
         view.columns([
             "purchase_id",
             "branch_id",
-            "branch_code",
             "customer_name",
             "sales_rep_id",
             "sales_rep_name",
@@ -142,7 +141,6 @@ export async function up(knex: Knex): Promise<void> {
             knex.select([
                 "p.id as purchase_id",
                 "b.id as branch_id",
-                "b.branch_code",
                 "c.name as customer_name",
                 "e.id as sales_rep_id",
                 "e.name as sales_rep_name",
@@ -241,10 +239,10 @@ export async function up(knex: Knex): Promise<void> {
             "location_type",
             "city",
             "address",
-            "branch_code",
-            "factory_code",
             "latitude",
-            "longitude"
+            "longitude",
+            "branch_id",
+            "factory_id"
         ]);
         view.as(
             knex.select([
@@ -252,10 +250,10 @@ export async function up(knex: Knex): Promise<void> {
                 "l.location_type",
                 "l.city",
                 "l.address",
-                "b.branch_code",
-                "f.factory_code",
                 "l.latitude",
-                "l.longitude"
+                "l.longitude",
+                "b.id as branch_id",
+                "f.id as factory_id"
             ])
                 .from("location as l")
                 .leftJoin("branch as b", "l.id", "b.location_id")
@@ -272,8 +270,6 @@ export async function up(knex: Knex): Promise<void> {
             "location_type",
             "city",
             "address",
-            "branch_code",
-            "factory_code",
             "sales_target",
             "production_target"
         ]);
@@ -285,8 +281,6 @@ export async function up(knex: Knex): Promise<void> {
                 "l.location_type",
                 "l.city",
                 "l.address",
-                "b.branch_code",
-                "f.factory_code",
                 "b.sales_target",
                 "f.production_target"
             ])

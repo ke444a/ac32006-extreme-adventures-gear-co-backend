@@ -10,6 +10,12 @@ const db = knex({
         password: "123PASSWORD###123",
         database: "extreme_adventures_db"
     },
+    // connection: {
+    //     host: "127.0.0.1",
+    //     user: "root",
+    //     password: "",
+    //     database: "extreme_adventures_gear_db"
+    // },
     migrations: {
         directory: "./src/migrations"
     },

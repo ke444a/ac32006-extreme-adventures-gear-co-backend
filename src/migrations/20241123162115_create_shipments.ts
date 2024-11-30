@@ -16,6 +16,7 @@ export async function up(knex: Knex): Promise<void> {
         table.enum("shipment_status", ["preparing_to_ship", "in_transit", "shipped", "delivered"]).notNullable();
         table.timestamp("shipped_at").nullable();
         table.timestamp("arrived_at").nullable();
+        table.timestamp("updated_at").defaultTo(knex.fn.now());
 
         table.foreign("factory_id").references("factory.id");
         table.foreign("branch_id").references("branch.id");
