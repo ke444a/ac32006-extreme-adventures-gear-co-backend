@@ -8,8 +8,8 @@ import {
 } from "@/queries/products";
 
 class ProductsService {
-    public async getAllProducts() {
-        return await getAllProductsQuery();
+    public async getAllProducts(price?: "asc" | "desc") {
+        return await getAllProductsQuery(price);
     }
 
     public async getProductCategories() {
@@ -35,8 +35,8 @@ class ProductsService {
         return await deleteProductQuery(productId);
     }
 
-    public async getProductsByBranch(branchId: number) {
-        return await getProductsByBranchQuery(branchId);
+    public async getProductsByBranch(branchId: number, price?: "asc" | "desc") {
+        return await getProductsByBranchQuery(branchId, price);
     }
 }
 

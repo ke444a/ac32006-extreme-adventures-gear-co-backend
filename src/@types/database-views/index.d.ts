@@ -17,7 +17,6 @@ interface IGlobalAllProductsView {
 interface IAuthenticatedEmployeeDetailsView {
     id: number;
     name: string;
-    email: string;
     role: IEmployeeRole;
     location_type: string;
     location_city: string;

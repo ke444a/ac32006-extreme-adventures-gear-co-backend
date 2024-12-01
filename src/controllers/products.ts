@@ -3,9 +3,10 @@ import ProductsService from "@/services/products";
 import { ResponseStatus } from "@/config/enums";
 import { convertSnakeCaseToCamel } from "@/utils/convertSnakeCaseToCamel";
 
-export const getAllProducts = async (_req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const products = await ProductsService.getAllProducts();
+        const price = req.query.price as "asc" | "desc";
+        const products = await ProductsService.getAllProducts(price);
         res.status(200).json({ status: ResponseStatus.SUCCESS, data: { products: convertSnakeCaseToCamel(products) } });
     } catch (error) {
         console.error(error);
@@ -15,7 +16,8 @@ export const getAllProducts = async (_req: Request, res: Response) => {
 
 export const getProductsByBranch = async (req: Request, res: Response) => {
     try {
-        const products = await ProductsService.getProductsByBranch(req.user.branch_id!);
+        const price = req.query.price as "asc" | "desc";
+        const products = await ProductsService.getProductsByBranch(req.user.branch_id!, price);
         res.status(200).json({ status: ResponseStatus.SUCCESS, data: { products: convertSnakeCaseToCamel(products) } });
     } catch (error) {
         console.error(error);

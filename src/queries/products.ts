@@ -5,8 +5,12 @@ const getProductsByIdsQuery = (ids: number[]) => {
     return knex("product").whereIn("id", ids);
 };
 
-const getAllProductsQuery = () => {
-    return knex<IGlobalAllProductsView>(GlobalViews.ALL_PRODUCTS);
+const getAllProductsQuery = (price?: "asc" | "desc") => {
+    const query = knex<IGlobalAllProductsView>(GlobalViews.ALL_PRODUCTS);
+    if (price) {
+        query.orderBy("price", price);
+    }
+    return query;
 };
 
 const getProductCategoriesQuery = () => {
@@ -21,8 +25,12 @@ const deleteProductQuery = (productId: number) => {
     return knex<IAdminModifyProductView>(AdminViews.MODIFY_PRODUCT).where("id", productId).delete();
 };
 
-const getProductsByBranchQuery = (branchId: number) => {
-    return knex<ISalesRepBranchProductsView>(SalesRepresentativeViews.PRODUCTS_IN_BRANCH).where({ branch_id: branchId });
+const getProductsByBranchQuery = (branchId: number, price?: "asc" | "desc") => {
+    let query = knex<ISalesRepBranchProductsView>(SalesRepresentativeViews.PRODUCTS_IN_BRANCH).where({ branch_id: branchId });
+    if (price) {
+        query = query.orderBy("price", price);
+    }
+    return query;
 };
 
 const updateProductPriceQuery = (productId: number, price: number) => {

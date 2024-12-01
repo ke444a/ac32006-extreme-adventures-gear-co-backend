@@ -50,6 +50,7 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.createView("authenticated_employee_details_view", (view) => {
         view.columns([
             "id",
+            "name",
             "role",
             "location_type",
             "location_city",
@@ -60,6 +61,7 @@ export async function up(knex: Knex): Promise<void> {
         view.as(
             knex.select([
                 "employee.id",
+                "employee.name",
                 "employee_role.name as role",
                 "location.location_type",
                 "location.city as location_city",

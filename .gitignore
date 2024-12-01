@@ -4,3 +4,4 @@ textfile
 .DS_Store
 dist/
 credentials.json
+queries.sql

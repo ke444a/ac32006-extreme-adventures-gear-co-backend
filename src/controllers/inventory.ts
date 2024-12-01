@@ -5,7 +5,9 @@ import { convertSnakeCaseToCamel } from "@/utils/convertSnakeCaseToCamel";
 
 export const getBranchItemsByBranch = async (req: Request, res: Response) => {
     try {
-        const branchItems = await InventoryService.getBranchItemsByBranch(req.user.branch_id!);
+        const quantity = req.query.quantity as "asc" | "desc";
+        const category = req.query.category ? parseInt(req.query.category as string) : undefined;
+        const branchItems = await InventoryService.getBranchItemsByBranch(req.user.branch_id!, quantity, category);
         res.status(200).json(<APIResponse>{ message: "", status: ResponseStatus.SUCCESS, data: { branchItems: convertSnakeCaseToCamel(branchItems) } });
     } catch (error) {
         console.log(error);

@@ -5,7 +5,8 @@ import { convertSnakeCaseToCamel } from "@/utils/convertSnakeCaseToCamel";
 
 export const getAllFactoryEmployees = async (req: Request, res: Response) => {
     try {
-        const employees = await EmployeesService.getFactoryEmployeesByFactoryId(req.user.factory_id!);
+        const employment = req.query.employment as "full_time" | "part_time";
+        const employees = await EmployeesService.getFactoryEmployeesByFactoryId(req.user.factory_id!, employment);
         res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { employees: convertSnakeCaseToCamel(employees) } });
     } catch (error) {
         console.log(error);

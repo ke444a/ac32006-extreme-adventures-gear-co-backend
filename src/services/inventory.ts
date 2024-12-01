@@ -6,8 +6,8 @@ import {
 } from "@/queries/inventory";
 
 class InventoryService {
-    public async getBranchItemsByBranch(branchId: number) {
-        return await getBranchItemsByBranchQuery(branchId);
+    public async getBranchItemsByBranch(branchId: number, quantity?: "asc" | "desc", category?: number) {
+        return await getBranchItemsByBranchQuery(branchId, quantity, category);
     }
 
     public async createNewBranchItem(branchId: number, productId: number, quantity: number) {

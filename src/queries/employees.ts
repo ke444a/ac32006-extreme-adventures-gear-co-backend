@@ -31,9 +31,13 @@ const getEmployeeByIdQuery = async (employeeId: number) => {
         .where({ id: employeeId });
 };
 
-const getEmployeesByFactoryIdQuery = async (factoryId: number) => {
-    return await knex<IFactoryManagerEmployeesView>(FactoryManagerViews.FACTORY_EMPLOYEES)
+const getEmployeesByFactoryIdQuery = (factoryId: number, employment?: "full_time" | "part_time") => {
+    const query = knex<IFactoryManagerEmployeesView>(FactoryManagerViews.FACTORY_EMPLOYEES)
         .where({ factory_id: factoryId });
+    if (employment) {
+        query.where("employment_type", employment);
+    }
+    return query;
 };
 
 const updateFactoryEmployeeQuery = async (

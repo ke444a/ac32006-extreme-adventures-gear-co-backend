@@ -38,7 +38,8 @@ export const createPurchaseWithNewCustomer = async (req: Request, res: Response)
 
 export const getAllPurchasesByBranch = async (req: Request, res: Response) => {
     try {
-        const purchases = await PurchasesService.getAllPurchasesByBranch(req.user.branch_id!);
+        const price = req.query.price as "asc" | "desc";
+        const purchases = await PurchasesService.getAllPurchasesByBranch(req.user.branch_id!, price);
         res.status(200).json(<APIResponse>{ status: ResponseStatus.SUCCESS, data: { purchases: convertSnakeCaseToCamel(purchases) } });
     } catch (error) {
         console.log(error);

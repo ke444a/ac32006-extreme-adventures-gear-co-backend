@@ -36,8 +36,12 @@ const getAllPurchasesByLocationQuery = async (locationId: number) => {
     return await knex<IAdminPurchaseSummaryView>(AdminViews.PURCHASE_SUMMARY).where({ location_id: locationId });
 };
 
-const getAllPurchasesByBranchQuery = async (branchId: number) => {
-    return await knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId);
+const getAllPurchasesByBranchQuery = async (branchId: number, price?: "asc" | "desc") => {
+    const query = knex<ISalesRepPurchaseSummaryView>(SalesRepresentativeViews.PURCHASE_SUMMARY).where("branch_id", branchId);
+    if (price) {
+        query.orderBy("total_price", price);
+    }
+    return query;
 };
 
 const getPurchasesByBranchAndEmployeeQuery = async (branchId: number, employeeId: number) => {

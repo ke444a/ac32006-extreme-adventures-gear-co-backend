@@ -64,8 +64,8 @@ class PurchasesService {
         await createPurchaseItemsQuery(purchaseItemWithPrice, purchaseId);
     }
 
-    public async getAllPurchasesByBranch(branchId: number) {
-        const purchases = await getAllPurchasesByBranchQuery(branchId);
+    public async getAllPurchasesByBranch(branchId: number, price?: "asc" | "desc") {
+        const purchases = await getAllPurchasesByBranchQuery(branchId, price);
         const purchaseItems = await getAllPurchaseItemsByPurchaseIdsQuery(purchases.map(purchase => purchase.purchase_id));
         const purchasesWithItems = purchases.map(purchase => {
             return { ...purchase, items: purchaseItems.filter(item => Number(item.purchase_id) === Number(purchase.purchase_id)) };

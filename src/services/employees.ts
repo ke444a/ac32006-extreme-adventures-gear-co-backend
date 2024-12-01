@@ -12,8 +12,8 @@ import {
 } from "@/queries/employees";
 
 class EmployeesService {
-    public async getFactoryEmployeesByFactoryId(factoryId: number) {
-        return await getEmployeesByFactoryIdQuery(factoryId);
+    public async getFactoryEmployeesByFactoryId(factoryId: number, employment?: "full_time" | "part_time") {
+        return await getEmployeesByFactoryIdQuery(factoryId, employment);
     }
 
     public async updateFactoryEmployeeDetails(
